@@ -1,0 +1,24 @@
+{
+  "name": "Peerdea",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently \"cd backend && node server.js\" \"cd client && npm start\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CMU-17-356/Peerdea.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CMU-17-356/Peerdea/issues"
+  },
+  "homepage": "https://github.com/CMU-17-356/Peerdea#readme",
+  "dependencies": {
+    "concurrently": "^4.1.0"
+  }
+}
