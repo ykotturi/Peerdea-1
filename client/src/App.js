@@ -107,6 +107,8 @@ class App extends Component {
     const { data } = this.state;
     return (
       <div>
+        <Header />
+        <Main />
         <div>
           <ul>
             {data.length <= 0
@@ -163,8 +165,6 @@ class App extends Component {
             </button>
           </div>
         </div>
-        <Header />
-        <Main />
       </div>
     );
   }
