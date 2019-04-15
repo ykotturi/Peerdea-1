@@ -17,7 +17,7 @@ import { WebBrowser } from 'expo';
 export class GenerateGroupKeyword extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { text: 'Create group name here:' };
+    this.state = { text: 'Enter group name here:' };
   }
   // first, should check to make sure valid group name (numbers and letters only, longer than 5 characters)
   // then, there should be some check as to whether the group name is already taken
