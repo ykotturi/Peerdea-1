@@ -5,10 +5,15 @@ import { createStackNavigator, createBottomTabNavigator } from 'react-navigation
 import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
 import LinksScreen from '../screens/LinksScreen';
+import CreateGroupScreen from '../screens/CreateGroupScreen';
+import JoinGroupScreen from '../screens/LinksScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 
+// HomeStack follows a similar pattern as what is provided here: http://facebook.github.io/react-native/docs/navigation
 const HomeStack = createStackNavigator({
-  Home: HomeScreen,
+  Home: {screen: HomeScreen},
+  CreateGroup: {screen: CreateGroupScreen},
+  JoinGroup: {screen: JoinGroupScreen},
 });
 
 HomeStack.navigationOptions = {
