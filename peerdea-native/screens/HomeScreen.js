@@ -7,6 +7,8 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Button,
+  Alert,
 } from 'react-native';
 import { WebBrowser } from 'expo';
 
@@ -17,40 +19,43 @@ export default class HomeScreen extends React.Component {
     header: null,
   };
 
+
   render() {
     return (
       <View style={styles.container}>
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+
           <View style={styles.welcomeContainer}>
-            <Image
-              source={
-                __DEV__
-                  ? require('../assets/images/robot-dev.png')
-                  : require('../assets/images/robot-prod.png')
-              }
-              style={styles.welcomeImage}
+          
+          <Image
+            style={{width: 300, height: 50}}
+            source={require('../assets/images/peerdea-logo-draft.png')}
+          />
+            
+            <Text style={styles.getStartedText}>Welcome to Peerdea</Text>
+
+            <Button
+              onPress={() => {
+                Alert.alert('Create a new group');
+              }}
+              title="Create a new group"
+              color="#841584"
+              accessibilityLabel="Create a new group"
             />
+
+          <Button
+            onPress={() => {
+              Alert.alert('Join an existing group');
+            }}
+            title="Join an existing group"
+            color="#841584"
+            accessibilityLabel="Join an existing group"
+          />
+
           </View>
 
-          <View style={styles.getStartedContainer}>
-            {this._maybeRenderDevelopmentModeWarning()}
+          
 
-            <Text style={styles.getStartedText}>Get started by opening</Text>
-
-            <View style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
-              <MonoText style={styles.codeHighlightText}>screens/HomeScreen.js</MonoText>
-            </View>
-
-            <Text style={styles.getStartedText}>
-              Change this text and your app will automatically reload.
-            </Text>
-          </View>
-
-          <View style={styles.helpContainer}>
-            <TouchableOpacity onPress={this._handleHelpPress} style={styles.helpLink}>
-              <Text style={styles.helpLinkText}>Help, it didn’t automatically reload!</Text>
-            </TouchableOpacity>
-          </View>
         </ScrollView>
 
         <View style={styles.tabBarInfoContainer}>
@@ -114,6 +119,7 @@ const styles = StyleSheet.create({
     paddingTop: 30,
   },
   welcomeContainer: {
+    flex: 1,
     alignItems: 'center',
     marginTop: 10,
     marginBottom: 20,
