@@ -17,9 +17,12 @@ import { WebBrowser } from 'expo';
 export class GenerateGroupKeyword extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { text: 'Enter group keyword here' };
+    this.state = { text: 'Create group name here:' };
   }
-
+  // first, should check to make sure valid group name (numbers and letters only, longer than 5 characters)
+  // then, there should be some check as to whether the group name is already taken
+  // if not already taken, submit API post request to create a new group
+  // if it is taken, catch error and say group name already taken
   render() {
     return (
       <TextInput
