@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+  express_backend:
+    container_name: express_backend
+    build: ./express
+    ports:
+      - "80:80"
+    restart: always
+    networks:
+       - webappnetwork
+    depends_on:
+        - mongodb
+
+  react_frontend:
+    container_name: react_frontend
+    build: ./client
+    ports:
+      - "3000:3000"
+    restart: always
+    networks:
+       - webappnetwork
+
+  mongodb:
+    image: mongo
+    restart: always
+    container_name: mongodb
+    volumes:
+        - ./data-node:/data/db
+    ports:
+        - 27017:27017
+    command: mongod --noauth --smallfiles
+    networks:
+        - webappnetwork
+
+networks:
+    webappnetwork:
+        driver: bridge

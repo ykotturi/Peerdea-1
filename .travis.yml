@@ -1,0 +1,25 @@
+language: node_js
+node_js:
+  - "8"
+dist: xenial
+sudo: required
+services:
+  - docker
+
+env:
+  global:
+    - DOCKER_TLS_VERIFY="1"
+    - DOCKER_HOST="tcp://104.42.72.216:2376"
+    - DOCKER_CERT_PATH="azure"
+    - DOCKER_MACHINE_NAME="dronuts-2019-group-4"
+
+script:
+  - npm test --prefix express/
+  - docker-compose --file docker-compose.prod.yml build
+
+deploy:
+  skip_cleanup: true
+  provider: script
+  script: docker-compose --file docker-compose.prod.yml up -d --remove-orphans
+  on:
+    branch: master
