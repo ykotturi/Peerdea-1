@@ -5,7 +5,7 @@ const bodyParser = require("body-parser");
 const logger = require("morgan");
 const Data = require("./data");
 
-const API_PORT = 80;
+const API_PORT = 3001;
 const app = express();
 app.use(cors());
 const router = express.Router();
@@ -45,7 +45,8 @@ router.get("/getData", (req, res) => {
 // this method overwrites existing data in our database
 router.post("/updateData", (req, res) => {
   const { id, update } = req.body;
-  Data.findOneAndUpdate(id, update, err => {
+  console.log(req.body);
+  Data.findOneAndUpdate({ "_id" : id}, update, err => {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true });
   });
@@ -55,7 +56,8 @@ router.post("/updateData", (req, res) => {
 // this method removes existing data in our database
 router.delete("/deleteData", (req, res) => {
   const { id } = req.body;
-  Data.findOneAndDelete(id, err => {
+  console.log(req.body);
+  Data.findOneAndDelete({ "_id" : id}, err => {
     if (err) return res.send(err);
     return res.json({ success: true });
   });
@@ -67,7 +69,7 @@ router.post("/putData", (req, res) => {
   let data = new Data();
 
   const { id, message } = req.body;
-
+  console.log(req.body);
   if ((!id && id !== 0) || !message) {
     return res.json({
       success: false,

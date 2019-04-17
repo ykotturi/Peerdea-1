@@ -8,6 +8,10 @@ const MemberSchema = new Schema (
       ref: 'Group',
       required: true
     },
+    name: {
+      type: String,
+      required: true
+    }
   }
 );
 
