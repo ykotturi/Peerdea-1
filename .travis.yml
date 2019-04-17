@@ -1,0 +1,24 @@
+language: node_js
+node_js:
+  - "8"
+dist: xenial
+sudo: required
+services:
+  - docker
+
+env:
+  global:
+    - DOCKER_TLS_VERIFY="1"
+    - DOCKER_HOST="tcp://104.40.20.156:2376"
+    - DOCKER_CERT_PATH="azure"
+    - DOCKER_MACHINE_NAME="peerdea-17-356"
+
+script:
+  - docker-compose build
+
+deploy:
+  skip_cleanup: true
+  provider: script
+  script: docker-compose up -d --remove-orphans
+  on:
+    branch: master
