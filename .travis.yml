@@ -21,4 +21,4 @@ deploy:
   provider: script
   script: docker-compose up -d --remove-orphans
   on:
-    branch: integrate-express
+    branch: master
