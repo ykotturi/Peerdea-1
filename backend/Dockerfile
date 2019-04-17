@@ -3,7 +3,7 @@ FROM node:8-alpine as client
 MAINTAINER dronuts_4
 
 # Change working directory
-WORKDIR /usr/app/backend
+WORKDIR /usr/src/app
 
 # Install App Dependencies
 COPY package*.json ./
