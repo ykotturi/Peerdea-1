@@ -14,12 +14,11 @@ env:
     - DOCKER_MACHINE_NAME="dronuts-2019-group-4"
 
 script:
-  - npm test --prefix express/
-  - docker-compose --file docker-compose.prod.yml build
+  - docker-compose build
 
 deploy:
   skip_cleanup: true
   provider: script
-  script: docker-compose --file docker-compose.prod.yml up -d --remove-orphans
+  script: docker-compose up -d --remove-orphans
   on:
     branch: master
