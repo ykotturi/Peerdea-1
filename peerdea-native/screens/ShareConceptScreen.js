@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { Button, Image, View, StyleSheet } from 'react-native';
+import { Button, Image, View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 // because we're using mangaged apps version of expo (and not bare version):
-import { ImagePicker, Permissions } from 'expo';
+import { ImagePicker, Permissions, Camera } from 'expo';
+import ConceptCamera from '../components/ConceptCamera';
 
-export default class ImagePickerExample extends React.Component {
+export default class ConceptImagePicker extends React.Component {
   state = {
     image: null,
+    //should probably have permissions variable in state
   };
 
 
@@ -27,6 +29,7 @@ export default class ImagePickerExample extends React.Component {
         />
         {image &&
           <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
+          <ConceptCamera/>
       </View>
     );
   }
@@ -38,7 +41,11 @@ export default class ImagePickerExample extends React.Component {
       aspect: [4, 3],
     });
 
-    console.log(result);
+    // probably need some express api post call to add "result" variable to database
+
+
+    console.log('RESULT IS' + result);
+    console.log('RESULT.URI IS' + result.uri);
 
     if (!result.cancelled) {
       this.setState({ image: result.uri });
