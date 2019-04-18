@@ -13,12 +13,15 @@ import {
 } from 'react-native';
 import { WebBrowser } from 'expo';
 
+console.log("this is a test print statement");
 
 export class GenerateGroupKeyword extends React.Component {
   constructor(props) {
     super(props);
     this.state = { text: 'Enter group name here:' };
   }
+
+
   // first, should check to make sure valid group name (numbers and letters only, longer than 5 characters)
   // then, there should be some check as to whether the group name is already taken
   // if not already taken, submit API post request to create a new group
@@ -48,6 +51,8 @@ export default class CreateGroupScreen extends React.Component {
         <Text style={styles.getStartedText}>Create a new group below:</Text>
 
           <View style={styles.welcomeContainer}>
+
+         
           
               <Image
                 style={{width: 300, height: 50}}
