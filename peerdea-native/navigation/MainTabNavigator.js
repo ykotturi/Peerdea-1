@@ -6,6 +6,7 @@ import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
 import LinksScreen from '../screens/LinksScreen';
 import CreateGroupScreen from '../screens/CreateGroupScreen';
+import ShareConceptScreen from '../screens/ShareConceptScreen';
 import JoinGroupScreen from '../screens/LinksScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 
@@ -14,6 +15,7 @@ const HomeStack = createStackNavigator({
   Home: {screen: HomeScreen},
   CreateGroup: {screen: CreateGroupScreen},
   JoinGroup: {screen: JoinGroupScreen},
+  ShareConcept: {screen: ShareConceptScreen},
 });
 
 HomeStack.navigationOptions = {
