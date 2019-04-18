@@ -93,7 +93,15 @@ router.post("/putData", (req, res) => {
 // this is our get method
 // this method fetches all available data in our database
 router.get("/getGroup", (req, res) => {
-   Group.find((err, data) => {
+    Group.find((err, data) => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true, data: data });
+  });
+});
+
+router.get("/getGroup2", (req, res) => {
+   keyword = req.query.keyword;
+   Group.find({"keyword" : keyword}, (err, data) => {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true, data: data });
   });
@@ -134,6 +142,187 @@ router.post("/putGroup", (req, res) => {
 //    });
 //  }
   group.save(err => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true });
+  });
+});
+
+
+// this is our get method
+// this method fetches all available data in our database
+router.get("/getIdeas", (req, res) => {
+   Idea.find((err, data) => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true, data: data });
+  });
+});
+
+router.get("/getIdeasByMember", (req, res) => {
+   memberID = req.query.memberID;
+   Idea.find({"member_id" : memberID}, (err, data) => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true, data: data });
+  });
+});
+
+
+
+// this is our update method
+// this method overwrites existing data in our database
+router.post("/updateIdea", (req, res) => {
+  const { id, update } = req.body;
+  console.log(req.body);
+  Idea.findOneAndUpdate({ "_id" : id}, update, err => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true });
+  });
+});
+
+// this is our delete method
+// this method removes existing data in our database
+router.delete("/deleteIdea", (req, res) => {
+  const { id } = req.body;
+  console.log(req.body);
+  Idea.findOneAndDelete({ "_id" : id}, err => {
+    if (err) return res.send(err);
+    return res.json({ success: true });
+  });
+});
+
+// this is our create methid
+// this method adds new data in our database
+router.post("/putIdea", (req, res) => {
+  let idea = new Idea(req.body);
+
+  console.log(req.body);
+//  if ((!id && id !== 0) || !message) {
+//    return res.json({
+//      success: false,
+//      error: "INVALID INPUTS"
+//    });
+//  }
+  idea.save(err => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true });
+  });
+});
+
+
+// this is our get method
+// this method fetches all available data in our database
+router.get("/getMembers", (req, res) => {
+   Member.find((err, data) => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true, data: data });
+  });
+});
+
+router.get("/getMembersByGroup", (req, res) => {
+   groupID = req.query.groupID;
+   Member.find({"group_id" : groupID}, (err, data) => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true, data: data });
+  });
+});
+
+
+
+// this is our update method
+// this method overwrites existing data in our database
+router.post("/updateMember", (req, res) => {
+  const { id, update } = req.body;
+  console.log(req.body);
+  Member.findOneAndUpdate({ "_id" : id}, update, err => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true });
+  });
+});
+
+// this is our delete method
+// this method removes existing data in our database
+router.delete("/deleteMember", (req, res) => {
+  const { id } = req.body;
+  console.log(req.body);
+  Member.findOneAndDelete({ "_id" : id}, err => {
+    if (err) return res.send(err);
+    return res.json({ success: true });
+  });
+});
+
+// this is our create methid
+// this method adds new data in our database
+router.post("/putMember", (req, res) => {
+  let member = new Member(req.body);
+
+  console.log(req.body);
+//  if ((!id && id !== 0) || !message) {
+//    return res.json({
+//      success: false,
+//      error: "INVALID INPUTS"
+//    });
+//  }
+  member.save(err => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true });
+  });
+});
+
+
+
+// this is our get method
+// this method fetches all available data in our database
+router.get("/getReviews", (req, res) => {
+   Review.find((err, data) => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true, data: data });
+  });
+});
+
+router.get("/getReviewsByIdea", (req, res) => {
+   ideaID = req.query.ideaID;
+   Review.find({"idea_id" : ideaID}, (err, data) => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true, data: data });
+  });
+});
+
+
+
+// this is our update method
+// this method overwrites existing data in our database
+router.post("/updateReview", (req, res) => {
+  const { id, update } = req.body;
+  console.log(req.body);
+  Review.findOneAndUpdate({ "_id" : id}, update, err => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true });
+  });
+});
+
+// this is our delete method
+// this method removes existing data in our database
+router.delete("/deleteReview", (req, res) => {
+  const { id } = req.body;
+  console.log(req.body);
+  Review.findOneAndDelete({ "_id" : id}, err => {
+    if (err) return res.send(err);
+    return res.json({ success: true });
+  });
+});
+
+// this is our create methid
+// this method adds new data in our database
+router.post("/putReview", (req, res) => {
+  let review = new Review(req.body);
+
+  console.log(req.body);
+//  if ((!id && id !== 0) || !message) {
+//    return res.json({
+//      success: false,
+//      error: "INVALID INPUTS"
+//    });
+//  }
+  review.save(err => {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true });
   });
