@@ -9,7 +9,7 @@ const Idea = require("./src/idea")
 const Member = require("./src/member")
 const Review = require("./src/review")
 
-const API_PORT = 3001;
+const API_PORT = 80;
 const app = express();
 app.use(cors());
 const router = express.Router();
