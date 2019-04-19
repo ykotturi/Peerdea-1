@@ -3,12 +3,8 @@ const Schema = mongoose.Schema;
 
 const GroupSchema = new Schema(
   {
-    keyword: {
+    name: {
       type: String, 
-      required: true
-    },
-    illuminate: {
-      type: Boolean, 
       required: true
     }
   }

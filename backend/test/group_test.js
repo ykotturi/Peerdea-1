@@ -9,8 +9,7 @@ describe('Group test', () => {
 	describe('Testing groups', () => {
 		it('Creates a group', (done) => {
 			group = new Group({
-				keyword: 'secret', 
-				illuminate: true
+				name: 'secret'
 			});
 			assert(group != null);
 			group.save()
@@ -46,7 +45,6 @@ describe('Group test', () => {
 
 		it('Does not save a group with missing fields', (done) => {
 			wrongGroup = new Group({
-				keyword: 'secret'
 			});
 
 			wrongGroup.validate(err => {
@@ -58,21 +56,5 @@ describe('Group test', () => {
 				}
 			});
 		});
-
-    it('Does not save a group with incorrect illuminate field type', (done) => {
-      wrongGroup = new Group({
-        keyword: 'secret',
-        illuminate: 'test'
-      });
-
-      wrongGroup.validate(err => {
-        if (err) {
-          return done();
-        }
-        else {
-          throw new Error('Should generate error!');
-        }
-      });
-    });
 	});
 });
