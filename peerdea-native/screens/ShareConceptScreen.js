@@ -13,6 +13,7 @@ export default class ConceptImagePicker extends React.Component {
 
   askPermissionsAsync = async () => {
       await Permissions.askAsync(Permissions.CAMERA_ROLL);
+      await Permissions.askAsync(Permissions.CAMERA);
       // probably need to do something to verify that permissions
       // were actually granted
    };
@@ -27,9 +28,12 @@ export default class ConceptImagePicker extends React.Component {
           title="Pick an image from camera roll"
           onPress={this._pickImage}
         />
+        <Button
+          title="Take a picture"
+          onPress={this._takePicture}
+        />
         {image &&
           <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
-          <ConceptCamera/>
       </View>
     );
   }
@@ -51,4 +55,18 @@ export default class ConceptImagePicker extends React.Component {
       this.setState({ image: result.uri });
     }
   };
+
+  _takePicture = async () => {
+    await this.askPermissionsAsync();
+    let result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+      base64: false,
+    });
+    this.setState({ result });
+     if (!result.cancelled) {
+      this.setState({ image: result.uri });
+    }
+  };
+
 }
