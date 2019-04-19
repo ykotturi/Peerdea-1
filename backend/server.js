@@ -5,9 +5,7 @@ const bodyParser = require("body-parser");
 const logger = require("morgan");
 const Data = require("./data");
 const Group = require("./src/group")
-const Idea = require("./src/idea")
-const Member = require("./src/member")
-const Review = require("./src/review")
+const Concept = require("./src/concept")
 
 const API_PORT = 80;
 const app = express();
@@ -35,58 +33,6 @@ db.on("error", console.error.bind(console, "MongoDB connection error:"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(logger("dev"));
-
-// this is our get method
-// this method fetches all available data in our database
-router.get("/getData", (req, res) => {
-  Data.find((err, data) => {
-    if (err) return res.json({ success: false, error: err });
-    return res.json({ success: true, data: data });
-  });
-});
-
-// this is our update method
-// this method overwrites existing data in our database
-router.post("/updateData", (req, res) => {
-  const { id, update } = req.body;
-  console.log(req.body);
-  Data.findOneAndUpdate({ "_id" : id}, update, err => {
-    if (err) return res.json({ success: false, error: err });
-    return res.json({ success: true });
-  });
-});
-
-// this is our delete method
-// this method removes existing data in our database
-router.delete("/deleteData", (req, res) => {
-  const { id } = req.body;
-  console.log(req.body);
-  Data.findOneAndDelete({ "_id" : id}, err => {
-    if (err) return res.send(err);
-    return res.json({ success: true });
-  });
-});
-
-// this is our create methid
-// this method adds new data in our database
-router.post("/putData", (req, res) => {
-  let data = new Data();
-
-  const { id, message } = req.body;
-  console.log(req.body);
-  if ((!id && id !== 0) || !message) {
-    return res.json({
-      success: false,
-      error: "INVALID INPUTS"
-    });
-  }
-  data.message = message;
-  data.id = id;
-  data.save(err => {
-    if (err) return res.json({ success: false, error: err });
-    return res.json({ success: true });
-  });
-});
 
 
 
@@ -150,76 +96,16 @@ router.post("/putGroup", (req, res) => {
 
 // this is our get method
 // this method fetches all available data in our database
-router.get("/getIdeas", (req, res) => {
-   Idea.find((err, data) => {
+router.get("/getConcepts", (req, res) => {
+   Concept.find((err, data) => {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true, data: data });
   });
 });
 
-router.get("/getIdeasByMember", (req, res) => {
-   memberID = req.query.memberID;
-   Idea.find({"member_id" : memberID}, (err, data) => {
-    if (err) return res.json({ success: false, error: err });
-    return res.json({ success: true, data: data });
-  });
-});
-
-
-
-// this is our update method
-// this method overwrites existing data in our database
-router.post("/updateIdea", (req, res) => {
-  const { id, update } = req.body;
-  console.log(req.body);
-  Idea.findOneAndUpdate({ "_id" : id}, update, err => {
-    if (err) return res.json({ success: false, error: err });
-    return res.json({ success: true });
-  });
-});
-
-// this is our delete method
-// this method removes existing data in our database
-router.delete("/deleteIdea", (req, res) => {
-  const { id } = req.body;
-  console.log(req.body);
-  Idea.findOneAndDelete({ "_id" : id}, err => {
-    if (err) return res.send(err);
-    return res.json({ success: true });
-  });
-});
-
-// this is our create methid
-// this method adds new data in our database
-router.post("/putIdea", (req, res) => {
-  let idea = new Idea(req.body);
-
-  console.log(req.body);
-//  if ((!id && id !== 0) || !message) {
-//    return res.json({
-//      success: false,
-//      error: "INVALID INPUTS"
-//    });
-//  }
-  idea.save(err => {
-    if (err) return res.json({ success: false, error: err });
-    return res.json({ success: true });
-  });
-});
-
-
-// this is our get method
-// this method fetches all available data in our database
-router.get("/getMembers", (req, res) => {
-   Member.find((err, data) => {
-    if (err) return res.json({ success: false, error: err });
-    return res.json({ success: true, data: data });
-  });
-});
-
-router.get("/getMembersByGroup", (req, res) => {
+router.get("/getConceptsByGroup", (req, res) => {
    groupID = req.query.groupID;
-   Member.find({"group_id" : groupID}, (err, data) => {
+   Concept.find({"group_id" : groupID}, (err, data) => {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true, data: data });
   });
@@ -229,10 +115,10 @@ router.get("/getMembersByGroup", (req, res) => {
 
 // this is our update method
 // this method overwrites existing data in our database
-router.post("/updateMember", (req, res) => {
+router.post("/updateConcept", (req, res) => {
   const { id, update } = req.body;
   console.log(req.body);
-  Member.findOneAndUpdate({ "_id" : id}, update, err => {
+  Concept.findOneAndUpdate({ "_id" : id}, update, err => {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true });
   });
@@ -240,10 +126,10 @@ router.post("/updateMember", (req, res) => {
 
 // this is our delete method
 // this method removes existing data in our database
-router.delete("/deleteMember", (req, res) => {
+router.delete("/deleteConcept", (req, res) => {
   const { id } = req.body;
   console.log(req.body);
-  Member.findOneAndDelete({ "_id" : id}, err => {
+  Concept.findOneAndDelete({ "_id" : id}, err => {
     if (err) return res.send(err);
     return res.json({ success: true });
   });
@@ -251,8 +137,8 @@ router.delete("/deleteMember", (req, res) => {
 
 // this is our create methid
 // this method adds new data in our database
-router.post("/putMember", (req, res) => {
-  let member = new Member(req.body);
+router.post("/putConcept", (req, res) => {
+  let concept = new Concept(req.body);
 
   console.log(req.body);
 //  if ((!id && id !== 0) || !message) {
@@ -261,72 +147,13 @@ router.post("/putMember", (req, res) => {
 //      error: "INVALID INPUTS"
 //    });
 //  }
-  member.save(err => {
+  Concept.save(err => {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true });
   });
 });
 
 
-
-// this is our get method
-// this method fetches all available data in our database
-router.get("/getReviews", (req, res) => {
-   Review.find((err, data) => {
-    if (err) return res.json({ success: false, error: err });
-    return res.json({ success: true, data: data });
-  });
-});
-
-router.get("/getReviewsByIdea", (req, res) => {
-   ideaID = req.query.ideaID;
-   Review.find({"idea_id" : ideaID}, (err, data) => {
-    if (err) return res.json({ success: false, error: err });
-    return res.json({ success: true, data: data });
-  });
-});
-
-
-
-// this is our update method
-// this method overwrites existing data in our database
-router.post("/updateReview", (req, res) => {
-  const { id, update } = req.body;
-  console.log(req.body);
-  Review.findOneAndUpdate({ "_id" : id}, update, err => {
-    if (err) return res.json({ success: false, error: err });
-    return res.json({ success: true });
-  });
-});
-
-// this is our delete method
-// this method removes existing data in our database
-router.delete("/deleteReview", (req, res) => {
-  const { id } = req.body;
-  console.log(req.body);
-  Review.findOneAndDelete({ "_id" : id}, err => {
-    if (err) return res.send(err);
-    return res.json({ success: true });
-  });
-});
-
-// this is our create methid
-// this method adds new data in our database
-router.post("/putReview", (req, res) => {
-  let review = new Review(req.body);
-
-  console.log(req.body);
-//  if ((!id && id !== 0) || !message) {
-//    return res.json({
-//      success: false,
-//      error: "INVALID INPUTS"
-//    });
-//  }
-  review.save(err => {
-    if (err) return res.json({ success: false, error: err });
-    return res.json({ success: true });
-  });
-});
 
 // append /api for our http requests
 app.use("/api", router);
