@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 // this will be our data base's data structure
+// this should be deleted later on
 const DataSchema = new Schema(
   {
     id: Number,
