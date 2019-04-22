@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Button, Image, View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 // because we're using mangaged apps version of expo (and not bare version):
 import { ImagePicker, Permissions, Camera } from 'expo';
-import ConceptCamera from '../components/ConceptCamera';
+
 
 export default class ConceptImagePicker extends React.Component {
   state = {
@@ -46,10 +46,10 @@ export default class ConceptImagePicker extends React.Component {
     });
 
     // probably need some express api post call to add "result" variable to database
-
-
-    console.log('RESULT IS' + result);
-    console.log('RESULT.URI IS' + result.uri);
+    
+    //uncomment below if you'd like to see what RESULT is, printed in console in expo
+    //console.log('RESULT IS' + result);
+    //console.log('RESULT.URI IS' + result.uri);
 
     if (!result.cancelled) {
       this.setState({ image: result.uri });
@@ -63,8 +63,8 @@ export default class ConceptImagePicker extends React.Component {
       aspect: [4, 3],
       base64: false,
     });
-    this.setState({ result });
-     if (!result.cancelled) {
+    
+    if (!result.cancelled) {
       this.setState({ image: result.uri });
     }
   };
