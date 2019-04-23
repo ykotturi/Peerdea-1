@@ -1,3 +1,7 @@
 # Peerdea
 
-## To start native app, enter `yarn start` in the command line
+## Peerdea enables amateur creators, designers, and innovators to receive effective feedback on their concepts from a group of trusted peers.
+
+## Peerdea's current team of contributors: Judy Zhang (B.S. Information systems), Michael Chang (B.S. Computer Science), led by Yasmine Kotturi (Ph.D. Human-Computer Interaction).
+
+## To run, use npm start
