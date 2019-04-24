@@ -137,7 +137,7 @@ router.post("/putConcept", (req, res) => {
 
   console.log(req.body);
 
-  Concept.save(err => {
+  concept.save(err => {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true });
   });
