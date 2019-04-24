@@ -56,30 +56,26 @@ export default class ShareConcept extends React.Component {
   }
 
   _sendConcept = async () => {
-
-        let data = {
+      let data = {
         method: 'POST',
         credentials: 'same-origin',
-      mode: 'same-origin',
-      body: JSON.stringify({
-         group_id: "1",
-		 name: "Michael",
-		  media: { data: fs.readFileSync(this.state.image), contentType: 'image/png'},
-	      description: 'test',
-      }),
-      headers: {
-        'Accept':       'application/json',
-        'Content-Type': 'application/json',
-        'X-CSRFToken':  cookie.load('csrftoken')
-        }
-        }
+        mode: 'same-origin',
+        body: JSON.stringify({
+        group_id: "1",
+  		  name: "Michael",
+  		  media: { data: fs.readFileSync(this.state.image), contentType: 'image/png'},
+  	      description: 'test',
+        }),
+        headers: {
+          'Accept':       'application/json',
+          'Content-Type': 'application/json',
+          'X-CSRFToken':  cookie.load('csrftoken')
+          }
+       }
         Alert.alert('Thanks for sharing!');
         return fetch('http://104.40.20.156/api/putConcept', data)
         .then(response => response.json())  // promise
         .then(json => dispatch(receiveAppos(json)))
-
-
-
    }
 
 
