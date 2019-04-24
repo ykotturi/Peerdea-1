@@ -73,6 +73,7 @@ export default class ShareConcept extends React.Component {
     console.log('RESULT IS' + result);
     console.log('RESULT.URI IS' + result.uri);
     console.log('RESULT.base64 IS' + result.base64);
+    console.log('THIS STATE is' + this.state);
 
     if (!result.cancelled) {
       this.setState({ image: result.uri });
