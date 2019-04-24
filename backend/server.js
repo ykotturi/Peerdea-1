@@ -7,7 +7,7 @@ const Data = require("./data");
 const Group = require("./src/group")
 const Concept = require("./src/concept")
 
-const API_PORT = 80;
+const API_PORT = 3000;
 const app = express();
 app.use(cors());
 const router = express.Router();
@@ -137,7 +137,7 @@ router.post("/putConcept", (req, res) => {
 
   console.log(req.body);
 
-  Concept.save(err => {
+  concept.save(err => {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true });
   });

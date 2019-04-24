@@ -96,11 +96,11 @@ export default class ShareConcept extends React.Component {
         mode: 'same-origin',
         body: JSON.stringify({
           group_id: "5cb7d06d5de2e75344837340",
-    		  name: this.state.author,
-    		  media: { 
+              name: this.state.author,
+              media: { 
             data: buff, 
             contentType: 'image/png'},
-    	      description: this.state.story,
+              description: this.state.story,
         }),
         headers: {
           'Accept':       'application/json',
@@ -152,7 +152,7 @@ export default class ShareConcept extends React.Component {
            this.setState({
               image1: uriString,
               image2: uriString2,
-              author2: author
+              author2: author,
            })
         })
         .catch((error) => {
