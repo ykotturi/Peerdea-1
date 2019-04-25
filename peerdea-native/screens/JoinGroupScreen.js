@@ -13,40 +13,11 @@ import {
 import { WebBrowser } from 'expo';
 import { Button } from 'react-native-elements';
 
-export class EnterGroupName extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { 
-      text: 'Enter group name',
-      memberName: 'Enter your name' 
-    };
-  }
-
-
-  // first, should check to make sure valid group name (numbers and letters only, longer than 5 characters)
-  // then, there should be some check as to whether the group name is already taken
-  // if not already taken, submit API post request to create a new group
-  // if it is taken, catch error and say group name already taken
-  render() {
-    return (
-      <View>
-        <TextInput
-          style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-          onChangeText={(text) => this.setState({text})}
-          value={this.state.text}
-        />
-        <TextInput
-          style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-          onChangeText={(memberName) => this.setState({memberName})}
-          value={this.state.memberName}
-        />
-      </View>
-    );
-  }
-}
-
-
 export default class JoinGroupScreen extends React.Component {
+  state = {
+    groupName: '',
+    memberName: ''
+  };
 
   render() {
     const {navigate} = this.props.navigation;
@@ -57,7 +28,16 @@ export default class JoinGroupScreen extends React.Component {
             source={require('../assets/images/peerdea-logo-draft.png')}
           />
         <Text style={styles.getStartedText}>Create a new group below:</Text>
-        <EnterGroupName/>
+        <TextInput
+          style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+          onChangeText={(text) => this.setState({text})}
+          placeholder='Enter your group name'
+        />
+        <TextInput
+          style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+          onChangeText={(memberName) => this.setState({memberName})}
+          placeholder='Enter your screen name'
+        />
         <Button raised 
           onPress={() => navigate('ShareConcept')}
           title="Create"

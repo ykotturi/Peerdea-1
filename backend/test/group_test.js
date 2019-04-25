@@ -20,12 +20,19 @@ describe('Group test', () => {
 		});
 
 		it('Removes a group', (done) => {
+			Group.find({name: "secret"}, (err, data) => {
+				console.log(data);
+			});
 			group.remove()
 				.then(() => Group.findOne({_id: group._id}))
 				.then((res) => {
-					if (res === null) {done();}
+					if (res === null) {console.log("cool")}
 					else {throw new Error('Should remove group');}
 				})
+			Group.find({name: "secret"}, (err, data) => {
+				console.log(data);
+				done();
+			});
 		});
 
 		it('Does not save a group with the incorrect fields', (done) => {

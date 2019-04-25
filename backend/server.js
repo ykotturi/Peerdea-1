@@ -7,7 +7,7 @@ const Data = require("./data");
 const Group = require("./src/group")
 const Concept = require("./src/concept")
 
-const API_PORT = 80;
+const API_PORT = 3001;
 const app = express();
 app.use(cors());
 const router = express.Router();
@@ -45,11 +45,11 @@ router.get("/getGroup", (req, res) => {
   });
 });
 
-router.get("/getGroup2", (req, res) => {
-   keyword = req.query.keyword;
-   Group.find({"keyword" : keyword}, (err, data) => {
+router.get("/getGroupByName", (req, res) => {
+  var name = req.query.name;
+  Group.find({"name" : name}, (err, data) => {
     if (err) return res.json({ success: false, error: err });
-    return res.json({ success: true, data: data });
+    return res.json({ success: true, data: data});
   });
 });
 
@@ -78,9 +78,10 @@ router.delete("/deleteGroup", (req, res) => {
 // this is our create methid
 // this method adds new data in our database
 router.post("/putGroup", (req, res) => {
+  console.log("put body " + req.body);
   let group = new Group(req.body);
 
-  console.log(req.body);
+  
 
   group.save(err => {
     if (err) return res.json({ success: false, error: err });

@@ -28,7 +28,7 @@ export default class ConceptImagePicker extends React.Component {
 
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>Welcome to {JSON.stringify(groupName)}, {JSON.stringify(screenName)}</Text>
+        <Text>Welcome to {groupName}, {screenName}</Text>
 
         <Button
           title="Pick an image from camera roll"

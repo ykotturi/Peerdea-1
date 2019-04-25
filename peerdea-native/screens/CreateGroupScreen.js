@@ -20,19 +20,19 @@ import { Button } from 'react-native-elements';
 
 export default class CreateGroupScreen extends React.Component {
   state = {
-    groupName: 'Enter your group name here',
-    name: 'Enter your screen name here'
+    groupName: '',
+    memberName: ''
   };
 
   async onCreate() {
     try {
     
-      const checkRes = await fetch('http://104.40.20.156/api/getGroup2?name=' + this.state.groupName, {method: 'GET'});
+      const checkRes = await fetch('http://128.237.196.14:3001/api/getGroupByName?name=' + this.state.groupName, {method: 'GET'});
       const checkResJson = await checkRes.json();
-      console.log(JSON.stringify(checkResJson.data));
+      console.log("print " + JSON.stringify(checkResJson.data));
       if (checkResJson.data.length > 0) {
         Alert.alert(
-          'Group name already exists',
+          'Group name ' + this.state.groupName + ' already exists',
           'Please try again with a different group name',
           [
             {text: 'OK', onPress: () => console.log('OK Pressed')},
@@ -62,7 +62,7 @@ export default class CreateGroupScreen extends React.Component {
         }
         this.props.navigation.navigate('ShareConcept', {
           groupName: this.state.groupName,
-          name: this.state.name
+          name: this.state.memberName
         });
       }
     }
@@ -86,16 +86,14 @@ export default class CreateGroupScreen extends React.Component {
           <TextInput
             style={{height: 40, flex: 0.5, borderColor: 'gray', borderWidth: 1}}
             onChangeText={(text) => this.setState({groupName: text})}
-            onEndEditing={() => this.setState({groupName: text})}
-            value={this.state.groupName}
+            placeholder="Enter your group name here"
           />
         </View>
         <View style={{flexDirection: 'row'}}> 
           <TextInput
             style={{height: 40, flex: 0.5, borderColor: 'gray', borderWidth: 1}}
-            onChangeText={(text) => this.setState({name: text})}
-            onEndEditing={() => this.setState({name: text})}
-            value={this.state.name}
+            onChangeText={(text) => this.setState({memberName: text})}
+            placeholder="Enter your screen name here"
           />
         </View>
         <Button raised 
