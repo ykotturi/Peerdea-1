@@ -19,30 +19,65 @@ export default class JoinGroupScreen extends React.Component {
     memberName: ''
   };
 
+  async onJoin() {
+    console.log("join pressed "+ this.state.groupName);
+    try {
+      //check if the group exists first
+      const checkRes = await fetch('http://128.237.219.139:3001/api/getGroupByName?name=' + this.state.groupName, {method: 'GET'});
+      const checkResJson = await checkRes.json();
+      console.log("print " + JSON.stringify(checkResJson.data));
+
+      //if the group does not exist, notify the user to create a new group name
+      if (checkResJson.data.length == 0) {
+        Alert.alert(
+          'Group ' + this.state.groupName + ' does not exist',
+          'Please try again with a different group name',
+          [
+            {text: 'OK', onPress: () => console.log('OK Pressed')},
+          ],
+          {cancelable: false},
+        );
+      } 
+      //if the group exists, redirect the screen to the create concept screen
+      else {
+        this.props.navigation.navigate('ShareConcept', {
+          groupName: this.state.groupName,
+          name: this.state.memberName
+        });
+      }
+    }
+    catch(err) {
+      console.log(err);
+    }
+  }
+
   render() {
-    const {navigate} = this.props.navigation;
     return (
       <View style={styles.container}>
         <Image
             style={{width: 300, height: 50}}
             source={require('../assets/images/peerdea-logo-draft.png')}
           />
-        <Text style={styles.getStartedText}>Create a new group below:</Text>
-        <TextInput
-          style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-          onChangeText={(text) => this.setState({text})}
-          placeholder='Enter your group name'
-        />
-        <TextInput
-          style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-          onChangeText={(memberName) => this.setState({memberName})}
-          placeholder='Enter your screen name'
-        />
+        <Text style={styles.getStartedText}>Join a group below:</Text>
+        <View style={{flexDirection: 'row'}}> 
+          <TextInput
+            style={{height: 40, flex: 0.5, borderColor: 'gray', borderWidth: 1}}
+            onChangeText={(text) => this.setState({groupName: text})}
+            placeholder="Enter your group name here"
+          />
+        </View>
+        <View style={{flexDirection: 'row'}}> 
+          <TextInput
+            style={{height: 40, flex: 0.5, borderColor: 'gray', borderWidth: 1}}
+            onChangeText={(text) => this.setState({memberName: text})}
+            placeholder="Enter your screen name here"
+          />
+        </View>
         <Button raised 
-          onPress={() => navigate('ShareConcept')}
-          title="Create"
+          onPress={() => this.onJoin()}
+          title="Join"
           color="#841584"
-          accessibilityLabel="Create"
+          accessibilityLabel="Join"
         />
        </View>
     );

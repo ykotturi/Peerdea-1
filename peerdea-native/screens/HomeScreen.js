@@ -48,13 +48,6 @@ export default class HomeScreen extends React.Component {
             accessibilityLabel="Join an existing group"
           />
 
-          <Button raised
-            onPress={() => navigate('ShareConcept')}
-            title="Share a concept"
-            color="#841584"
-            accessibilityLabel="Share a concept"
-          />
-
 
       </View>
     );

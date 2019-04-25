@@ -26,10 +26,12 @@ export default class CreateGroupScreen extends React.Component {
 
   async onCreate() {
     try {
-    
-      const checkRes = await fetch('http://128.237.196.14:3001/api/getGroupByName?name=' + this.state.groupName, {method: 'GET'});
+      //check if the group exists first
+      const checkRes = await fetch('http://128.237.219.139:3001/api/getGroupByName?name=' + this.state.groupName, {method: 'GET'});
       const checkResJson = await checkRes.json();
       console.log("print " + JSON.stringify(checkResJson.data));
+
+      //if the group exists, notify the user to create a new group name
       if (checkResJson.data.length > 0) {
         Alert.alert(
           'Group name ' + this.state.groupName + ' already exists',
@@ -39,7 +41,10 @@ export default class CreateGroupScreen extends React.Component {
           ],
           {cancelable: false},
         );
-      } else {
+      } 
+      //if the group does not exist, create a new group with the name
+      //and redirect the screen to the create concept screen
+      else {
         var data = {
           method: 'POST',
           credentials: 'same-origin',
@@ -74,7 +79,6 @@ export default class CreateGroupScreen extends React.Component {
   }
 
   render() {
-    const {navigate} = this.props.navigation;
     return (
       <View style={styles.container}>
         <Image

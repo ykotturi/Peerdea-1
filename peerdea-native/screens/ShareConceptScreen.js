@@ -6,6 +6,10 @@ import { ImagePicker, Permissions, Camera } from 'expo';
 
 export default class ConceptImagePicker extends React.Component {
 
+  static navigationOptions = {
+    title: 'Share a Concept',
+  };
+
   state = {
     image: null,
     //should probably have permissions variable in state
@@ -28,6 +32,10 @@ export default class ConceptImagePicker extends React.Component {
 
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Image
+          style={{width: 300, height: 50}}
+          source={require('../assets/images/peerdea-logo-draft.png')}
+        />
         <Text>Welcome to {groupName}, {screenName}</Text>
 
         <Button
