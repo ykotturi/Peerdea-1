@@ -7,9 +7,9 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Button,
   Alert,
 } from 'react-native';
+import { Button } from 'react-native-elements';
 import { WebBrowser } from 'expo';
 
 import { MonoText } from '../components/StyledText';
@@ -25,9 +25,6 @@ export default class HomeScreen extends React.Component {
     
     return (
       <View style={styles.container}>
-        <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-
-          <View style={styles.welcomeContainer}>
           
           <Image
             style={{width: 300, height: 50}}
@@ -37,42 +34,28 @@ export default class HomeScreen extends React.Component {
             <Text style={styles.getStartedText}>Welcome to Peerdea</Text>
 
 
-            <Button
+            <Button raised 
               onPress={() => navigate('CreateGroup')}
               title="Create a new group"
               color="#841584"
               accessibilityLabel="Create a new group"
             />
 
-          <Button
-            onPress={() => {
-              Alert.alert('Join an existing group');
-            }}
+          <Button raised
+            onPress={() => navigate('JoinGroup')}
             title="Join an existing group"
             color="#841584"
             accessibilityLabel="Join an existing group"
           />
 
-          <Button
+          <Button raised
             onPress={() => navigate('ShareConcept')}
             title="Share a concept"
             color="#841584"
             accessibilityLabel="Share a concept"
           />
 
-          </View>
 
-          
-
-        </ScrollView>
-
-        <View style={styles.tabBarInfoContainer}>
-          <Text style={styles.tabBarInfoText}>This is a tab bar. You can edit it in:</Text>
-
-          <View style={[styles.codeHighlightContainer, styles.navigationFilename]}>
-            <MonoText style={styles.codeHighlightText}>navigation/MainTabNavigator.js</MonoText>
-          </View>
-        </View>
       </View>
     );
   }
@@ -113,8 +96,11 @@ export default class HomeScreen extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
+    paddingTop: 30,
+    paddingBottom: 30, 
+    flex: 1, 
+    alignItems: 'center', 
+    justifyContent: 'center',
   },
   developmentModeText: {
     marginBottom: 20,
@@ -128,8 +114,10 @@ const styles = StyleSheet.create({
   },
   welcomeContainer: {
     flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: 30,
     marginBottom: 20,
   },
   welcomeImage: {

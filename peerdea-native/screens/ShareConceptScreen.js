@@ -5,6 +5,7 @@ import { ImagePicker, Permissions, Camera } from 'expo';
 
 
 export default class ConceptImagePicker extends React.Component {
+
   state = {
     image: null,
     //should probably have permissions variable in state
@@ -21,9 +22,14 @@ export default class ConceptImagePicker extends React.Component {
 
   render() {
     let { image } = this.state;
+    const {navigation} = this.props;
+    const groupName = navigation.getParam('groupName', 'NO GROUP');
+    const screenName = navigation.getParam('name', 'NO NAME');
 
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Text>Welcome to {JSON.stringify(groupName)}, {JSON.stringify(screenName)}</Text>
+
         <Button
           title="Pick an image from camera roll"
           onPress={this._pickImage}
