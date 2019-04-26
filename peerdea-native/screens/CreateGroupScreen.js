@@ -27,7 +27,7 @@ export default class CreateGroupScreen extends React.Component {
   async onCreate() {
     try {
       //check if the group exists first
-      const checkRes = await fetch('http://128.237.219.139:3001/api/getGroupByName?name=' + this.state.groupName, {method: 'GET'});
+      const checkRes = await fetch('http://128.237.194.92:3001/api/getGroupByName?name=' + this.state.groupName, {method: 'GET'});
       const checkResJson = await checkRes.json();
       console.log("print " + JSON.stringify(checkResJson.data));
 
