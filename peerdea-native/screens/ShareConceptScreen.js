@@ -53,10 +53,7 @@ export default class ShareConcept extends React.Component {
       />
       {image &&
       <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
-      {image1 &&
-      <Image source={{ uri: image1 }} style={{ width: 200, height: 200 }} />}
-      {image2 &&
-      <Image source={{ uri: image2 }} style={{ width: 200, height: 200 }} />}
+      {/* {image1 && <Image source={{ uri: image1 }} style={{ width: 200, height: 200 }} />} {image2 && <Image source={{ uri: image2 }} style={{ width: 200, height: 200 }} />}*/}
       
       <Text> {this.state.author2} </Text>
       <TextInput
@@ -69,12 +66,6 @@ export default class ShareConcept extends React.Component {
         title="Share concept with my group"
         color="#841584"
         accessibilityLabel="Share concept with my group"
-      />
-      <Button
-        onPress={() => { this._getConcepts();}}
-        title="Get concepts"
-        color="#841584"
-        accessibilityLabel="Get concepts"
       />
       </View>
       </ScrollView>
