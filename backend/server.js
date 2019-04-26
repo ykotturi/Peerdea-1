@@ -7,7 +7,7 @@ const Data = require("./data");
 const Group = require("./src/group")
 const Concept = require("./src/concept")
 
-const API_PORT = 80; //change for local testing, for instance to 3000
+const API_PORT = 3001; //change for local testing, for instance to 3000
 
 const app = express();
 app.use(cors());

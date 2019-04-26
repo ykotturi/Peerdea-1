@@ -15,7 +15,7 @@ export default class ShareConcept extends React.Component {
   };
 
   state = {
-    author: navigation.getParam('name', 'NO NAME'),
+    author: '',
     image: null,
     story: 'This is my concepts story!',
     imageBase64: null,
@@ -29,13 +29,19 @@ export default class ShareConcept extends React.Component {
       // were actually granted
    };
 
+  componentDidMount() {
+    const {navigation} = this.props;
+    const screenName = navigation.getParam('name', 'NO NAME');
+    this.setState({author: screenName});
+  }
+
 
   render() {
-    let { image } = this.state;
     const {navigation} = this.props;
     const groupName = navigation.getParam('groupName', 'NO GROUP');
     const screenName = navigation.getParam('name', 'NO NAME');
     let image = this.state.image;
+    // this.setState({author: screenName});
     // uncomment for testing encoding and decoding
     // let author2 = this.state.author2;
     // let image1 = this.state.image1;
