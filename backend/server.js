@@ -7,9 +7,11 @@ const Data = require("./data");
 const Group = require("./src/group")
 const Concept = require("./src/concept")
 
-const API_PORT = 3001;
+const API_PORT = 80; //change for local testing, for instance to 3000
+
 const app = express();
 app.use(cors());
+app.use(bodyParser({limit: '50mb'}));
 const router = express.Router();
 
 // this is our MongoDB database
@@ -138,7 +140,7 @@ router.post("/putConcept", (req, res) => {
 
   console.log(req.body);
 
-  Concept.save(err => {
+  concept.save(err => {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true });
   });
