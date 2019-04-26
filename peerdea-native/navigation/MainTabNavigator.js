@@ -9,6 +9,7 @@ import CreateGroupScreen from '../screens/CreateGroupScreen';
 import ShareConceptScreen from '../screens/ShareConceptScreen';
 import JoinGroupScreen from '../screens/LinksScreen';
 import SettingsScreen from '../screens/SettingsScreen';
+import GiveFeedbackScreen from '../screens/GiveFeedbackScreen';
 
 // HomeStack follows a similar pattern as what is provided here: http://facebook.github.io/react-native/docs/navigation
 const HomeStack = createStackNavigator({
@@ -16,6 +17,7 @@ const HomeStack = createStackNavigator({
   CreateGroup: {screen: CreateGroupScreen},
   JoinGroup: {screen: JoinGroupScreen},
   ShareConcept: {screen: ShareConceptScreen},
+  GiveFeedback: {screen: GiveFeedbackScreen},
 });
 
 HomeStack.navigationOptions = {

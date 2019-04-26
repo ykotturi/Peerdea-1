@@ -13,7 +13,10 @@ import { Buffer } from 'buffer';
 export default class ShareConcept extends React.Component {
   state = {
     author: 'Enter your name here',
+    author2: null,
     image: null,
+    image1: null,
+    image2: null,
     story: 'This is my concepts story!',
     imageBase64: null,
   };
@@ -29,10 +32,9 @@ export default class ShareConcept extends React.Component {
 
   render() {
     let image = this.state.image;
-    // uncomment for testing encoding and decoding
-    // let author2 = this.state.author2;
-    // let image1 = this.state.image1;
-    // let image2 = this.state.image2; 
+    let author2 = this.state.author2;
+    let image1 = this.state.image1;
+    let image2 = this.state.image2; 
 
     return (
       <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
@@ -53,7 +55,10 @@ export default class ShareConcept extends React.Component {
       />
       {image &&
       <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
-      {/* {image1 && <Image source={{ uri: image1 }} style={{ width: 200, height: 200 }} />} {image2 && <Image source={{ uri: image2 }} style={{ width: 200, height: 200 }} />}*/}
+      {image1 &&
+      <Image source={{ uri: image1 }} style={{ width: 200, height: 200 }} />}
+      {image2 &&
+      <Image source={{ uri: image2 }} style={{ width: 200, height: 200 }} />}
       
       <Text> {this.state.author2} </Text>
       <TextInput
@@ -66,6 +71,12 @@ export default class ShareConcept extends React.Component {
         title="Share concept with my group"
         color="#841584"
         accessibilityLabel="Share concept with my group"
+      />
+      <Button
+        onPress={() => { this._getConcepts();}}
+        title="Get concepts"
+        color="#841584"
+        accessibilityLabel="Get concepts"
       />
       </View>
       </ScrollView>
@@ -85,11 +96,11 @@ export default class ShareConcept extends React.Component {
         mode: 'same-origin',
         body: JSON.stringify({
           group_id: "5cb7d06d5de2e75344837340",
-    		  name: this.state.author,
-    		  media: { 
+              name: this.state.author,
+              media: { 
             data: buff, 
             contentType: 'image/png'},
-    	      description: this.state.story,
+              description: this.state.story,
         }),
         headers: {
           'Accept':       'application/json',
@@ -114,6 +125,42 @@ export default class ShareConcept extends React.Component {
    }
 
 
+  _getConcepts = () => {
+
+   
+
+    return fetch('http://104.40.20.156/api/getConcepts', {method: 'GET'})
+    .then((response) => response.json())
+        .then((responseJson) => {
+          let buff = new Buffer(responseJson.data[0].media.data);
+           // console.log(responseJson.data[0].media.data);
+           // image stored in database as buffer, so this line converts buffer to type base64
+           // console.log('RESPONSEJSON.DATA[0].MEDIA.DATA.tostring is ' + responseJson.data[0].media.data.toString('base64'));
+           const base64data = buff.toString('base64');
+           // takes base64 and turns into uri
+           const uriString = `data:image/gif;base64,${base64data}`;
+           // console.log('uriString is ' + uriString);
+           let buff2 = new Buffer(responseJson.data[4].media.data);
+           // console.log(responseJson.data[0].media.data);
+           // image stored in database as buffer, so this line converts buffer to type base64
+           // console.log('RESPONSEJSON.DATA[0].MEDIA.DATA.tostring is ' + responseJson.data[0].media.data.toString('base64'));
+           const base64data2 = buff2.toString('base64');
+           // takes base64 and turns into uri
+           const uriString2 = `data:image/gif;base64,${base64data2}`;
+           console.log('AUTHORIS ' + responseJson.data[4].name);
+           let author = responseJson.data[4].name;
+           this.setState({
+              image1: uriString,
+              image2: uriString2,
+              author2: author,
+           })
+        })
+        .catch((error) => {
+           console.error(error);
+        });
+  }
+
+
   //underscore before function name to distinguish internal methods from the lifecycle methods of react
   _pickImage = async () => {
     await this.askPermissionsAsync();
@@ -124,6 +171,14 @@ export default class ShareConcept extends React.Component {
     });
 
     // probably need some express api post call to add "result" variable to database
+    
+    //uncomment below if you'd like to see what RESULT is, printed in console in expo
+    //console.log('RESULT IS' + result);
+    //console.log('RESULT.URI IS' + result.uri);
+
+    // console.log('RESULT IS' + result);
+    // console.log('RESULT.URI IS' + result.uri);
+    // console.log('THIS STATE is' + this.state);
 
     if (!result.cancelled) {
       this.setState({ image: result.uri, imageBase64: result.base64 });
@@ -138,6 +193,9 @@ export default class ShareConcept extends React.Component {
       base64: true,
     });
 
+    // console.log('RESULT IS' + result);
+    // console.log('RESULT.URI IS' + result.uri);
+   
     
     if (!result.cancelled) {
       this.setState({  image: result.uri,imageBase64 : result.base64 });
