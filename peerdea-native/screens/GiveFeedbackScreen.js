@@ -34,7 +34,7 @@ export default class ShareConcept extends React.Component {
     let image = this.state.image;
     let author2 = this.state.author2;
     let image1 = this.state.image1;
-    let image2 = this.state.image2; //why would thi.state.image here give error this.state.image.image does not exist? where is this additional .image being appended?
+    let image2 = this.state.image2; 
 
     return (
       <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>

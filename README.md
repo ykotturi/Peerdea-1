@@ -4,4 +4,6 @@
 
 ## Peerdea's current team of contributors: Judy Zhang (B.S. Information systems), Michael Chang (B.S. Computer Science), led by Yasmine Kotturi (Ph.D. Human-Computer Interaction).
 
+## Peerdea uses: React Native via Expo, Express, MongoDB, Azure
+
 ## To run, use npm start
