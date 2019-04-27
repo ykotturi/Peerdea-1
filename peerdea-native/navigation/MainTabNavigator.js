@@ -13,25 +13,36 @@ import GiveFeedbackScreen from '../screens/GiveFeedbackScreen';
 
 // HomeStack follows a similar pattern as what is provided here: http://facebook.github.io/react-native/docs/navigation
 const HomeStack = createStackNavigator({
-  Home: {screen: HomeScreen},
+  Home: {
+    screen: HomeScreen,
+    navigationOptions: {
+      title: 'Home'
+    }},
   CreateGroup: {screen: CreateGroupScreen},
   JoinGroup: {screen: JoinGroupScreen},
   ShareConcept: {screen: ShareConceptScreen},
   GiveFeedback: {screen: GiveFeedbackScreen},
 });
 
-HomeStack.navigationOptions = {
-  tabBarLabel: 'Home',
-  tabBarIcon: ({ focused }) => (
-    <TabBarIcon
-      focused={focused}
-      name={
-        Platform.OS === 'ios'
-          ? `ios-information-circle${focused ? '' : '-outline'}`
-          : 'md-information-circle'
-      }
-    />
-  ),
+HomeStack.navigationOptions = ({navigation}) => {
+  let { routeName } = navigation.state.routes[navigation.state.index];
+  let navigationOptions = {
+    tabBarLabel: 'Home',
+    tabBarIcon: ({ focused }) => (
+      <TabBarIcon
+        focused={focused}
+        name={
+          Platform.OS === 'ios'
+            ? `ios-information-circle${focused ? '' : '-outline'}`
+            : 'md-information-circle'
+        }
+      />
+    ),
+  };
+  if (routeName === 'Home') {
+    navigationOptions.tabBarVisible = false;
+  };
+  return navigationOptions;
 };
 
 const LinksStack = createStackNavigator({
@@ -63,7 +74,10 @@ SettingsStack.navigationOptions = {
 };
 
 export default createBottomTabNavigator({
-  HomeStack,
-  LinksStack,
-  SettingsStack,
+  First: {
+    screen: HomeStack
+  },
+  Second: {
+    screen: SettingsStack
+  }
 });
