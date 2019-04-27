@@ -19,6 +19,7 @@ export default class ShareConcept extends React.Component {
     image: null,
     story: 'This is my concepts story!',
     imageBase64: null,
+    group_id: ''
   };
 
 
@@ -32,7 +33,8 @@ export default class ShareConcept extends React.Component {
   componentDidMount() {
     const {navigation} = this.props;
     const screenName = navigation.getParam('name', 'NO NAME');
-    this.setState({author: screenName});
+    const groupID = navigation.getParam('groupID', 'NO GROUP ID');
+    this.setState({author: screenName, group_id: groupID});
   }
 
 
@@ -41,7 +43,6 @@ export default class ShareConcept extends React.Component {
     const groupName = navigation.getParam('groupName', 'NO GROUP');
     const screenName = navigation.getParam('name', 'NO NAME');
     let image = this.state.image;
-    // this.setState({author: screenName});
     // uncomment for testing encoding and decoding
     // let author2 = this.state.author2;
     // let image1 = this.state.image1;
@@ -96,7 +97,7 @@ export default class ShareConcept extends React.Component {
         credentials: 'same-origin',
         mode: 'same-origin',
         body: JSON.stringify({
-          group_id: "5cb7d06d5de2e75344837340",
+          group_id: this.state.group_id,
     		  name: this.state.author,
     		  media: { 
             data: buff, 

@@ -23,7 +23,7 @@ export default class JoinGroupScreen extends React.Component {
     console.log("join pressed "+ this.state.groupName);
     try {
       //check if the group exists first
-      const checkRes = await fetch('http://128.237.194.92:3001/api/getGroupByName?name=' + this.state.groupName, {method: 'GET'});
+      const checkRes = await fetch('http://128.237.209.5:3001/api/getGroupByName?name=' + this.state.groupName, {method: 'GET'});
       const checkResJson = await checkRes.json();
       console.log("print " + JSON.stringify(checkResJson.data));
 
@@ -42,7 +42,8 @@ export default class JoinGroupScreen extends React.Component {
       else {
         this.props.navigation.navigate('ShareConcept', {
           groupName: this.state.groupName,
-          name: this.state.memberName
+          name: this.state.memberName,
+          groupID: checkResJson.data[0]._id
         });
       }
     }
