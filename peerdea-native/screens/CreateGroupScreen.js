@@ -7,62 +7,106 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Button,
   Alert,
   TextInput,
 } from 'react-native';
 import { WebBrowser } from 'expo';
+import { Button } from 'react-native-elements';
 
-console.log("this is a test print statement");
-
-export class GenerateGroupKeyword extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { text: 'Enter group name here:' };
-  }
-
-
-  // first, should check to make sure valid group name (numbers and letters only, longer than 5 characters)
-  // then, there should be some check as to whether the group name is already taken
-  // if not already taken, submit API post request to create a new group
-  // if it is taken, catch error and say group name already taken
-  render() {
-    return (
-      <TextInput
-        style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-        onChangeText={(text) => this.setState({text})}
-        value={this.state.text}
-      />
-    );
-  }
-}
-
+// first, should check to make sure valid group name (numbers and letters only, longer than 5 characters)
+// then, there should be some check as to whether the group name is already taken
+// if not already taken, submit API post request to create a new group
+// if it is taken, catch error and say group name already taken
 
 export default class CreateGroupScreen extends React.Component {
-  
-  static navigationOptions = {
-    header: null,
+  state = {
+    groupName: '',
+    memberName: ''
   };
+
+  async onCreate() {
+    try {
+      //check if the group exists first
+      const checkRes = await fetch('http://104.40.20.156/api/getGroupByName?name=' + this.state.groupName, {method: 'GET'});
+      const checkResJson = await checkRes.json();
+      console.log("print " + JSON.stringify(checkResJson.data));
+
+      //if the group exists, notify the user to create a new group name
+      if (checkResJson.data.length > 0) {
+        Alert.alert(
+          'Group name ' + this.state.groupName + ' already exists',
+          'Please try again with a different group name',
+          [
+            {text: 'OK', onPress: () => console.log('OK Pressed')},
+          ],
+          {cancelable: false},
+        );
+      } 
+      //if the group does not exist, create a new group with the name
+      //and redirect the screen to the create concept screen
+      else {
+        var data = {
+          method: 'POST',
+          credentials: 'same-origin',
+          mode: 'same-origin',
+          body: JSON.stringify({
+            name: this.state.groupName
+          }),
+          headers: {
+            'Accept':       'application/json',
+            'Content-Type': 'application/json',
+          }
+        }
+        try {
+          const createRes = await fetch('http://104.40.20.156/api/putGroup', data);
+          const createResJson = await createRes.json();
+          
+        }
+        catch(err) {
+          console.log(err);
+        }
+        this.props.navigation.navigate('ShareConcept', {
+          groupName: this.state.groupName,
+          name: this.state.memberName,
+          groupID: checkResJson.data[0]._id
+        });
+      }
+    }
+    catch(err) {
+      console.log(err);
+    }
+    
+    
+  }
 
   render() {
     return (
       <View style={styles.container}>
-        <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+        <Image
+            style={{width: 300, height: 50}}
+            source={require('../assets/images/peerdea-logo-draft.png')}
+          />
         <Text style={styles.getStartedText}>Create a new group below:</Text>
-
-          <View style={styles.welcomeContainer}>
-
-         
-          
-              <Image
-                style={{width: 300, height: 50}}
-                source={require('../assets/images/peerdea-logo-draft.png')}
-              />
-              <GenerateGroupKeyword/>
-          </View>
-
-
-        </ScrollView>
+        <View style={{flexDirection: 'row'}}> 
+          <TextInput
+            style={{height: 40, flex: 0.5, borderColor: 'gray', borderWidth: 1}}
+            onChangeText={(text) => this.setState({groupName: text})}
+            placeholder="Enter your group name here"
+          />
+        </View>
+        <View style={{flexDirection: 'row'}}> 
+          <TextInput
+            style={{height: 40, flex: 0.5, borderColor: 'gray', borderWidth: 1}}
+            onChangeText={(text) => this.setState({memberName: text})}
+            placeholder="Enter your screen name here"
+          />
+        </View>
+        <Button raised 
+          onPress={() => this.onCreate()}
+          title="Create"
+          color="#841584"
+          accessibilityLabel="Create"
+        />
        </View>
     );
   }
@@ -72,8 +116,11 @@ export default class CreateGroupScreen extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
+    paddingTop: 30,
+    paddingBottom: 30, 
+    flex: 1, 
+    alignItems: 'center', 
+    justifyContent: 'center',
   },
   developmentModeText: {
     marginBottom: 20,
