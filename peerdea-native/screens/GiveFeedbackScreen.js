@@ -13,32 +13,35 @@ import { Buffer } from 'buffer';
 export default class GiveFeedback extends React.Component {
   state = {
     author: null,
-    group_id: groupID
+    group_id: null,
     concepts: []
   };
 
 
-  componentDidMount() {
+  async componentDidMount() {
     const {navigation} = this.props;
     const screenName = navigation.getParam('name', 'NO NAME');
+    console.log(screenName);
     const groupID = navigation.getParam('groupID', '5cb7d06d5de2e75344837340');
+    console.log(groupID);
     this.setState({author: screenName, group_id: groupID});
-    const checkRes = await fetch('http://104.40.20.156/api/getConceptsByGroup?groupID=' + groupID, {method: 'GET'});
-    const checkResJson = await checkRes.json();
-    this.setState({concepts: checkResJson.data})
+    const res = await fetch('http://104.40.20.156/api/getConceptsByGroup?groupID=' + groupID, {method: 'GET'});
+    const resJson = await res.json();
+    this.setState({concepts: resJson.data});
 
   }
 
 
   render() {
     var conceptViews = [];
-
-	for each (var concept in this.state.concepts){
+    console.log("here");
+	for (i = 0; i < this.state.concepts.length; i++) {
+        var concept = this.state.concepts[i];
         let buff = new Buffer(concept.media.data);
         const base64data = buff.toString('base64');
         const uriString = `data:image/gif;base64,${base64data}`;
 		conceptViews.push(
-			<View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+			<View key = {i} style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
 				{uriString &&
                 <Image source={{ uri: uriString }} style={{ width: 200, height: 200 }} />}
                 <Text> {concept.name} </Text>
