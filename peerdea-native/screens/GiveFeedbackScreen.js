@@ -36,7 +36,7 @@ export default class GiveFeedback extends React.Component {
     var conceptViews = [];
     console.log("here");
 	for (i = 0; i < this.state.concepts.length; i++) {
-        var concept = this.state.concepts[i];
+        const concept = this.state.concepts[i];
         let buff = new Buffer(concept.media.data);
         const base64data = buff.toString('base64');
         const uriString = `data:image/gif;base64,${base64data}`;
@@ -46,6 +46,17 @@ export default class GiveFeedback extends React.Component {
                 <Image source={{ uri: uriString }} style={{ width: 200, height: 200 }} />}
                 <Text> {concept.name} </Text>
                 <Text> {concept.description} </Text>
+                <TouchableOpacity style={styles.btn}  onPress = {() => { this._yes(concept._id);}}>
+                   <Text>Yes</Text>
+                   <Image source={require('../assets/images/heart.png')}  style={{width: 20, height: 20}}/>
+
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.btn} onPress = {() => { this._yesAnd(concept._id);}}>
+                    <Text>Yes And</Text>
+                    <Image source={require('../assets/images/heart.png')}  style={{ width: 20, height: 20}}/>
+
+
+                </TouchableOpacity>
 			</View>
 		)
 	}
@@ -57,6 +68,15 @@ export default class GiveFeedback extends React.Component {
       </View>
       </ScrollView>
     );
+  }
+
+  _yes = async (id) => {
+        Alert.alert('Yes ' + id );
+  }
+
+
+  _yesAnd = async (id) => {
+        Alert.alert('Yes AND ' + id );
   }
 
 
@@ -78,4 +98,9 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingTop: 30,
   },
+   absoluteView: {
+        flex: 2,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
 });
