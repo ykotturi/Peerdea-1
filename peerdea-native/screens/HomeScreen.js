@@ -47,9 +47,12 @@ export default class HomeScreen extends React.Component {
             color="#841584"
             accessibilityLabel="Join an existing group"
           />
-
+        this.props.navigation.navigate('ShareConcept');
           <Button
-            onPress={() => navigate('GiveFeedback')}
+            onPress={() => navigate('GiveFeedback', {
+                name: 'Michael',
+                groupID: '5cb7d06d5de2e75344837340'
+                })}
             title="Give Feedback"
             color="#841584"
             accessibilityLabel="Give Feedback"
