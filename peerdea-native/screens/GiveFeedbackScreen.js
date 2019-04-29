@@ -1,7 +1,19 @@
 import React, { Component } from 'react';
-import { Button, Image, View, StyleSheet, Text, TouchableOpacity, TextInput, Alert, ScrollView } from 'react-native';
+import { Button, 
+          Image, 
+          View, 
+          StyleSheet, 
+          Text, 
+          TouchableOpacity, 
+          TouchableHighlight, 
+          TextInput, 
+          Alert, 
+          ScrollView, 
+          Modal } from 'react-native';
 // because we're using mangaged apps version of expo (and not bare version):
-import { ImagePicker, Permissions, Camera } from 'expo';
+import { ImagePicker, 
+         Permissions, 
+         Camera } from 'expo';
 import { ConceptDescription } from '../components/ConceptDescription'; 
 import { ConceptAuthor } from '../components/ConceptAuthor'; 
 import { Buffer } from 'buffer';
@@ -14,7 +26,8 @@ export default class GiveFeedback extends React.Component {
   state = {
     author: null,
     group_id: null,
-    concepts: []
+    concepts: [],
+    modalVisible: false,
   };
 
 
@@ -31,6 +44,9 @@ export default class GiveFeedback extends React.Component {
     for (i = 0; i < resJson.data.length; i++) {
         concepts[i].isCollapsed = true;
     }
+    // for (i = 0; i < resJson.data.length; i++) {
+    //     concepts[i].showModal = false;
+    // }
     this.setState({concepts: concepts});
 
   }
@@ -39,54 +55,76 @@ export default class GiveFeedback extends React.Component {
   render() {
     var conceptViews = [];
     console.log("here");
-	for (i = 0; i < this.state.concepts.length; i++) {
+    console.log("MODAL VISIBLE IS " + this.state.modalVisible);
+
+
+      //render all concepts w/ appended interactions
+	    for (i = 0; i < this.state.concepts.length; i++) {
         const concept = this.state.concepts[i];
         const index = i;
         var yesAndViews = []
         for (j = 0; j < concept.yesand.length; j++){
             const yesandText = concept.yesand[j];
             yesAndViews.push(
-				<Text key = {j}> {yesandText} </Text>
-
-
+				      <Text key = {j}> {yesandText} </Text>
             )
         }
         const yesAnds = yesAndViews;
         let buff = new Buffer(concept.media.data);
         const base64data = buff.toString('base64');
         const uriString = `data:image/gif;base64,${base64data}`;
-		conceptViews.push(
-			<View key = {i} style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-				{uriString &&
-                <Image source={{ uri: uriString }} style={{ width: 200, height: 200 }} />}
-                <Text> {concept.name} </Text>
-                <Text> {concept.description} </Text>
-                <TouchableOpacity style={styles.btn}  onPress = {() => { this._yes(concept._id);}}>
-                   <Text>Yes {concept.yes}</Text>
-                   <Image source={require('../assets/images/heart.png')}  style={{width: 20, height: 20}}/>
+    		conceptViews.push(
+    			<View key = {i} style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+    				{uriString &&
+              <Image source={{ uri: uriString }} style={{ width: 200, height: 200 }} />}
+              <Text> {concept.name} </Text>
+              <Text> {concept.description} </Text>
 
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.btn} onPress = {() => { this._yesAnd(concept._id);}}>
-                    <Text>Yes And</Text>
-                    <Image source={require('../assets/images/heart.png')}  style={{ width: 20, height: 20}}/>
+              <TouchableOpacity style={styles.btn}  onPress = {() => { this._yes(concept._id);}}>
+                <Text>Yes {concept.yes}</Text>
+                <Image source={require('../assets/images/heart.png')}  style={{width: 20, height: 20}}/>
+              </TouchableOpacity>
 
-
-                </TouchableOpacity>
-                {concept.isCollapsed &&
-                    <Button title="Expand" onPress={() => this._changeCollapse(index, false)}/>}
-                <Collapsible collapsed={concept.isCollapsed}>
-                    <Button title="Collapse" onPress={() => this._changeCollapse(index, true)}/>
-                    {yesAnds}
-                </Collapsible>
-			</View>
-		)
-	}
+              <TouchableOpacity style={styles.btn} onPress = {() => { this._yesAnd(concept._id);}}>
+                <Text>Yes And</Text>
+                <Image source={require('../assets/images/heart.png')}  style={{ width: 20, height: 20}}/>
+       
+              </TouchableOpacity>
+              {concept.isCollapsed &&
+                  <Button title="Expand" onPress={() => this._changeCollapse(index, false)}/>}
+              <Collapsible collapsed={concept.isCollapsed}>
+                  <Button title="Collapse" onPress={() => this._changeCollapse(index, true)}/>
+                  {yesAnds}
+              </Collapsible>
+    			</View>
+    	  )
+	    }
+     
+  
     return (
       <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Text style={styles.getStartedText}>Review Group Concepts</Text>
         { conceptViews }
       </View>
+       {this.state.modalVisible && <Modal
+          animationType="slide"
+          transparent={false}
+          visible={true}
+          onRequestClose={() => {
+            Alert.alert('Modal has been closed.');
+          }}>
+          <View style={{marginTop: 22}}>
+              <Text>Hello World!</Text>
+          </View>
+             <TouchableHighlight
+                onPress={() => {
+                  this.setState({modalVisible:false});
+                }}>
+                <Text>Hide Modal</Text>
+              </TouchableHighlight>
+        </Modal>
+      }
       </ScrollView>
     );
   }
@@ -102,13 +140,24 @@ export default class GiveFeedback extends React.Component {
         Alert.alert('Yes ' + id );
   }
 
+  // setModalVisible(visible) {
+  //   this.setState({modalVisible: visible});
+  // }
 
+// id here is the concept id
   _yesAnd = async (id) => {
-        Alert.alert('Yes AND ' + id );
+    console.log("we are in _yesand");
+    this.setState({modalVisible: true});
+    //Update state for whether modal is visible
   }
 
-
-
+//this is called on Modal's onRequest close
+  // _closeYesAnd = async (id) => {
+  //   console.log("we are in _closeyesand");
+  //   this.setState({modalVisible: false);
+  //   //fire post request
+  //   //Update state for whether modal is visible
+  // }
 }
 
 
