@@ -37,6 +37,18 @@ export default class GiveFeedback extends React.Component {
     console.log("here");
 	for (i = 0; i < this.state.concepts.length; i++) {
         const concept = this.state.concepts[i];
+
+        var yesAndViews = []
+        for (j = 0; j < concept.yesand.length; j++){
+            const yesandText = concept.yesand[j];
+            yesAndViews.push(
+            <View key = {j} style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+				<Text> {yesandText} </Text>
+
+			</View>
+            )
+        }
+        const yesAnds = yesAndViews;
         let buff = new Buffer(concept.media.data);
         const base64data = buff.toString('base64');
         const uriString = `data:image/gif;base64,${base64data}`;
@@ -47,7 +59,7 @@ export default class GiveFeedback extends React.Component {
                 <Text> {concept.name} </Text>
                 <Text> {concept.description} </Text>
                 <TouchableOpacity style={styles.btn}  onPress = {() => { this._yes(concept._id);}}>
-                   <Text>Yes</Text>
+                   <Text>Yes {concept.yes}</Text>
                    <Image source={require('../assets/images/heart.png')}  style={{width: 20, height: 20}}/>
 
                 </TouchableOpacity>
@@ -57,6 +69,7 @@ export default class GiveFeedback extends React.Component {
 
 
                 </TouchableOpacity>
+                {yesAnds}
 			</View>
 		)
 	}
