@@ -5,7 +5,7 @@ import { ImagePicker, Permissions, Camera } from 'expo';
 import { ConceptDescription } from '../components/ConceptDescription'; 
 import { ConceptAuthor } from '../components/ConceptAuthor'; 
 import { Buffer } from 'buffer';
-
+import Collapsible from 'react-native-collapsible';
 
 // PICK UP HERE
 //TODO: change infrastructure of this file to make state hold multple values of what a concet is 
@@ -27,7 +27,11 @@ export default class GiveFeedback extends React.Component {
     this.setState({author: screenName, group_id: groupID});
     const res = await fetch('http://104.40.20.156/api/getConceptsByGroup?groupID=' + groupID, {method: 'GET'});
     const resJson = await res.json();
-    this.setState({concepts: resJson.data});
+    concepts = resJson.data
+    for (i = 0; i < resJson.data.length; i++) {
+        concepts[i].isCollapsed = true;
+    }
+    this.setState({concepts: concepts});
 
   }
 
@@ -37,15 +41,14 @@ export default class GiveFeedback extends React.Component {
     console.log("here");
 	for (i = 0; i < this.state.concepts.length; i++) {
         const concept = this.state.concepts[i];
-
+        const index = i;
         var yesAndViews = []
         for (j = 0; j < concept.yesand.length; j++){
             const yesandText = concept.yesand[j];
             yesAndViews.push(
-            <View key = {j} style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-				<Text> {yesandText} </Text>
+				<Text key = {j}> {yesandText} </Text>
 
-			</View>
+
             )
         }
         const yesAnds = yesAndViews;
@@ -69,7 +72,12 @@ export default class GiveFeedback extends React.Component {
 
 
                 </TouchableOpacity>
-                {yesAnds}
+                {concept.isCollapsed &&
+                    <Button title="Expand" onPress={() => this._changeCollapse(index, false)}/>}
+                <Collapsible collapsed={concept.isCollapsed}>
+                    <Button title="Collapse" onPress={() => this._changeCollapse(index, true)}/>
+                    {yesAnds}
+                </Collapsible>
 			</View>
 		)
 	}
@@ -81,6 +89,13 @@ export default class GiveFeedback extends React.Component {
       </View>
       </ScrollView>
     );
+  }
+
+  _changeCollapse = async (index, val) => {
+        console.log(val)
+        concepts2 = this.state.concepts;
+        concepts2[index].isCollapsed = val;
+        this.setState({concepts: concepts2});
   }
 
   _yes = async (id) => {
