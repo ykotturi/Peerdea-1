@@ -6,6 +6,7 @@ import { ConceptDescription } from '../components/ConceptDescription';
 import { ConceptAuthor } from '../components/ConceptAuthor'; 
 import { Buffer } from 'buffer';
 import Collapsible from 'react-native-collapsible';
+import ImageCarousel from 'react-native-image-carousel';
 
 // PICK UP HERE
 //TODO: change infrastructure of this file to make state hold multple values of what a concet is 
@@ -18,11 +19,13 @@ export default class GiveFeedback extends React.Component {
   };
 
 
+
+
   async componentDidMount() {
     const {navigation} = this.props;
     const screenName = navigation.getParam('name', 'NO NAME');
     console.log(screenName);
-    const groupID = navigation.getParam('groupID', '5cb7d06d5de2e75344837340');
+    const groupID = navigation.getParam('groupID', '5cc211a9a158040015716bac');
     console.log(groupID);
     this.setState({author: screenName, group_id: groupID});
     const res = await fetch('http://104.40.20.156/api/getConceptsByGroup?groupID=' + groupID, {method: 'GET'});
@@ -34,6 +37,9 @@ export default class GiveFeedback extends React.Component {
     this.setState({concepts: concepts});
 
   }
+
+
+
 
 
   render() {
@@ -52,13 +58,35 @@ export default class GiveFeedback extends React.Component {
             )
         }
         const yesAnds = yesAndViews;
-        let buff = new Buffer(concept.media.data);
-        const base64data = buff.toString('base64');
-        const uriString = `data:image/gif;base64,${base64data}`;
+        var images = [];
+        for (imageI = 0; imageI < concept.media.length; imageI++){
+            const buff = new Buffer(concept.media[imageI].data);
+            const base64data = buff.toString('base64');
+            const uriString = `data:image/gif;base64,${base64data}`;
+            images.push(uriString);
+        }
+        const finalImages = images;
 		conceptViews.push(
 			<View key = {i} style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-				{uriString &&
-                <Image source={{ uri: uriString }} style={{ width: 200, height: 200 }} />}
+				<View style={{flex: 1}}>
+                  <ImageCarousel
+                        renderContent={(idx: number) => (
+                            <Image
+                              style={StyleSheet.absoluteFill}
+                              resizeMode="contain"
+                              source={{uri: finalImages[idx]}}
+                            />
+                          )}>
+                        {finalImages.map(url => (
+                          <Image
+                            style={{ width: 200, height: 200 }}
+                            key={url}
+                            source={{uri: url}}
+                            resizeMode="contain"
+                          />
+                        ))}
+                 </ImageCarousel>
+              </View>
                 <Text> {concept.name} </Text>
                 <Text> {concept.description} </Text>
                 <TouchableOpacity style={styles.btn}  onPress = {() => { this._yes(concept._id);}}>

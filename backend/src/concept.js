@@ -13,8 +13,10 @@ const ConceptSchema = new Schema (
       required: true
     },
     media: { 
-      data: Buffer, 
-      contentType: String
+      type: [
+      {data: Buffer,
+      contentType: String}],
+      required: true
     },
     description: {
       type: String, 
