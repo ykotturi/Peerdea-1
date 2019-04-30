@@ -7,7 +7,7 @@ const Data = require("./data");
 const Group = require("./src/group")
 const Concept = require("./src/concept")
 
-const API_PORT = 3000; //change for local testing, for instance to 3000
+const API_PORT = 80; //change for local testing, for instance to 3000
 
 const app = express();
 app.use(cors());
@@ -109,7 +109,14 @@ router.get("/getConceptsByGroup", (req, res) => {
   });
 });
 
-
+//for testing yes and yesand backend
+router.get("/getConceptByID", (req, res) => {
+  var id = req.query.id;
+  Concept.find({"_id" : id}, (err, data) => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true, data: data});
+  });
+});
 
 // this is our update method
 // this method overwrites existing data in our database
@@ -132,6 +139,8 @@ router.post("/yes", (req, res) => {
   });
 });
 
+// this method increments the number of yeses by one and also
+// pushes the comment onto the end of the list of comments
 router.post("/yesand", (req, res) => {
   const {id, text} = req.body;
   Concept.findOneAndUpdate({ "_id": id}, 
