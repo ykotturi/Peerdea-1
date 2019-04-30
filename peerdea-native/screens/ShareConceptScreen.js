@@ -5,22 +5,39 @@ import { ImagePicker, Permissions, Camera } from 'expo';
 import { ConceptDescription } from '../components/ConceptDescription'; 
 import { ConceptAuthor } from '../components/ConceptAuthor'; 
 import { Buffer } from 'buffer';
+import ImageCarousel from 'react-native-image-carousel';
 
 // PICK UP HERE
 //TODO: change infrastructure of this file to make state hold multple values of what a concet is 
 
 export default class ShareConcept extends React.Component {
+
   static navigationOptions = {
     title: 'Share a Concept',
   };
 
   state = {
     author: '',
-    image: null,
+    images: [],
+    imagesBase64: [],
     story: 'This is my concepts story!',
-    imageBase64: null,
     group_id: ''
   };
+
+
+
+
+
+
+  renderImage = (idx: number) => (
+    <Image
+      style={StyleSheet.absoluteFill}
+      resizeMode="contain"
+      source={{uri: this.state.images[idx]}}
+    />
+  );
+
+
 
 
   askPermissionsAsync = async () => {
@@ -64,10 +81,19 @@ export default class ShareConcept extends React.Component {
         title="Take a picture"
         onPress={this._takePicture}
       />
-      {image &&
-      <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
-      {/* {image1 && <Image source={{ uri: image1 }} style={{ width: 200, height: 200 }} />} {image2 && <Image source={{ uri: image2 }} style={{ width: 200, height: 200 }} />}*/}
-      
+      <View style={{flex: 1}}>
+          <ImageCarousel
+                renderContent={this.renderImage}>
+                {this.state.images.map(url => (
+                  <Image
+                    style={{ width: 200, height: 200 }}
+                    key={url}
+                    source={{uri: url}}
+                    resizeMode="contain"
+                  />
+                ))}
+         </ImageCarousel>
+      </View>
       <Text> {this.state.author2} </Text>
       <TextInput
         style={{height: 40, borderColor: 'gray', borderWidth: 1}}
@@ -82,6 +108,7 @@ export default class ShareConcept extends React.Component {
       />
       </View>
       </ScrollView>
+     
     );
   }
 
@@ -139,7 +166,11 @@ export default class ShareConcept extends React.Component {
     // probably need some express api post call to add "result" variable to database
 
     if (!result.cancelled) {
-      this.setState({ image: result.uri, imageBase64: result.base64 });
+      var temp = this.state.images;
+      temp.push(result.uri);
+      var temp2 = this.state.imagesBase64;
+      temp2.push(result.base64);
+      this.setState({ images: temp, imagesBase64: temp2 });
     }
   };
 
@@ -153,7 +184,11 @@ export default class ShareConcept extends React.Component {
 
     
     if (!result.cancelled) {
-      this.setState({  image: result.uri,imageBase64 : result.base64 });
+      var temp = this.state.images;
+      temp.push(result.uri);
+      var temp2 = this.state.imagesBase64;
+      temp2.push(result.base64);
+      this.setState({ images: temp, imagesBase64: temp2 });
     }
   };
 
