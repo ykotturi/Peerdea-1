@@ -8,7 +8,7 @@ const Group = require("./src/group")
 const Concept = require("./src/concept")
 
 
-const API_PORT = 80; //change for local testing, for instance to 3000
+const API_PORT = 3000; //change for local testing, for instance to 3000
 const app = express();
 app.use(cors());
 app.use(bodyParser({limit: '50mb'}));
@@ -116,6 +116,28 @@ router.post("/updateConcept", (req, res) => {
   const { id, update } = req.body;
   console.log(req.body);
   Concept.findOneAndUpdate({ "_id" : id}, update, err => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true });
+  });
+});
+
+// this method increments the number of yeses on a concept by one
+// mongoDB creates write locks automatically, each transaction is atomic
+router.post("/yes", (req, res) => {
+  const {id} = req.body;
+  Concept.findOneAndUpdate({ "_id": id}, { $inc: { "yes": 1 } }, err => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true });
+  });
+});
+
+router.post("/yesand", (req, res) => {
+  const {id, text} = req.body;
+  Concept.findOneAndUpdate({ "_id": id}, 
+    { 
+      $inc: { "yes": 1 }, 
+      $push: { "yesand": text} 
+    }, err => {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true });
   });
