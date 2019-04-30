@@ -18,11 +18,13 @@ describe('Concept test', () => {
 			concept = new Concept({
 				group_id: group._id,
 				name: 'secret',
-				media: null,
+				media: [],
 				description: 'test',
 			});
-			concept.media.data = fs.readFileSync(path.join(__dirname, 'noimage.png'));
-    		concept.media.contentType = 'image/png';
+			temp = {};
+			temp.data = fs.readFileSync(path.join(__dirname, 'noimage.png'));
+    		temp.contentType = 'image/png';
+    		concept.media.push(temp);
 			assert(concept != null);
 			concept.save()
 				.then(() => {
