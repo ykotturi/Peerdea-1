@@ -2,23 +2,45 @@ import React, { Component } from 'react';
 import { Button, Image, View, StyleSheet, Text, TouchableOpacity, TextInput, Alert, ScrollView } from 'react-native';
 // because we're using mangaged apps version of expo (and not bare version):
 import { ImagePicker, Permissions, Camera } from 'expo';
+<<<<<<< HEAD
+=======
+import { ConceptDescription } from '../components/ConceptDescription';
+import { ConceptAuthor } from '../components/ConceptAuthor';
+>>>>>>> 7b0ea30cba6f2a9f72f85599f888303bb85e3f71
 import { Buffer } from 'buffer';
+import ImageCarousel from 'react-native-image-carousel';
 
 // PICK UP HERE
-//TODO: change infrastructure of this file to make state hold multple values of what a concet is 
+//TODO: change infrastructure of this file to make state hold multple values of what a concet is
 
 export default class ShareConcept extends React.Component {
+
   static navigationOptions = {
     title: 'Share a Concept',
   };
 
   state = {
     author: '',
-    image: null,
+    images: [],
+    imagesBase64: [],
     story: 'This is my concepts story!',
-    imageBase64: null,
     group_id: ''
   };
+
+
+
+
+
+
+  renderImage = (idx: number) => (
+    <Image
+      style={StyleSheet.absoluteFill}
+      resizeMode="contain"
+      source={{uri: this.state.images[idx]}}
+    />
+  );
+
+
 
 
   askPermissionsAsync = async () => {
@@ -44,7 +66,7 @@ export default class ShareConcept extends React.Component {
     // uncomment for testing encoding and decoding
     // let author2 = this.state.author2;
     // let image1 = this.state.image1;
-    // let image2 = this.state.image2; 
+    // let image2 = this.state.image2;
 
     return (
       <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
@@ -62,10 +84,19 @@ export default class ShareConcept extends React.Component {
         title="Take a picture"
         onPress={this._takePicture}
       />
-      {image &&
-      <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
-      {/* {image1 && <Image source={{ uri: image1 }} style={{ width: 200, height: 200 }} />} {image2 && <Image source={{ uri: image2 }} style={{ width: 200, height: 200 }} />}*/}
-      
+      <View style={{flex: 1}}>
+          <ImageCarousel
+                renderContent={this.renderImage}>
+                {this.state.images.map(url => (
+                  <Image
+                    style={{ width: 200, height: 200 }}
+                    key={url}
+                    source={{uri: url}}
+                    resizeMode="contain"
+                  />
+                ))}
+         </ImageCarousel>
+      </View>
       <Text> {this.state.author2} </Text>
       <TextInput
         style={{height: 40, borderColor: 'gray', borderWidth: 1}}
@@ -80,16 +111,24 @@ export default class ShareConcept extends React.Component {
       />
       </View>
       </ScrollView>
+
     );
   }
 
   _sendConcept = () => {
 
-      
-      // get requests to get users group keyword
 
-      var buff = new Buffer(this.state.imageBase64, 'base64');
-      
+      // get requests to get users group keyword
+      var temp = []
+      for (i = 0; i < this.state.imagesBase64.length; i++){
+          const buff = new Buffer(this.state.imagesBase64[i], 'base64');
+          const elem = {
+            data: buff,
+            contentType: 'image/png'};
+          temp.push(elem);
+      }
+
+
       let data = {
         method: 'POST',
         credentials: 'same-origin',
@@ -97,9 +136,7 @@ export default class ShareConcept extends React.Component {
         body: JSON.stringify({
           group_id: this.state.group_id,
     		  name: this.state.author,
-    		  media: { 
-            data: buff, 
-            contentType: 'image/png'},
+    		  media: temp,
     	      description: this.state.story,
         }),
         headers: {
@@ -137,7 +174,11 @@ export default class ShareConcept extends React.Component {
     // probably need some express api post call to add "result" variable to database
 
     if (!result.cancelled) {
-      this.setState({ image: result.uri, imageBase64: result.base64 });
+      var temp = this.state.images;
+      temp.push(result.uri);
+      var temp2 = this.state.imagesBase64;
+      temp2.push(result.base64);
+      this.setState({ images: temp, imagesBase64: temp2 });
     }
   };
 
@@ -149,9 +190,13 @@ export default class ShareConcept extends React.Component {
       base64: true,
     });
 
-    
+
     if (!result.cancelled) {
-      this.setState({  image: result.uri,imageBase64 : result.base64 });
+      var temp = this.state.images;
+      temp.push(result.uri);
+      var temp2 = this.state.imagesBase64;
+      temp2.push(result.base64);
+      this.setState({ images: temp, imagesBase64: temp2 });
     }
   };
 
