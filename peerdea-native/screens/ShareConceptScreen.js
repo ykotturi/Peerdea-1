@@ -6,16 +6,20 @@ import { ConceptDescription } from '../components/ConceptDescription';
 import { ConceptAuthor } from '../components/ConceptAuthor'; 
 import { Buffer } from 'buffer';
 
-
 // PICK UP HERE
 //TODO: change infrastructure of this file to make state hold multple values of what a concet is 
 
 export default class ShareConcept extends React.Component {
+  static navigationOptions = {
+    title: 'Share a Concept',
+  };
+
   state = {
-    author: 'Enter your name here',
+    author: '',
     image: null,
     story: 'This is my concepts story!',
     imageBase64: null,
+    group_id: ''
   };
 
 
@@ -26,8 +30,18 @@ export default class ShareConcept extends React.Component {
       // were actually granted
    };
 
+  componentDidMount() {
+    const {navigation} = this.props;
+    const screenName = navigation.getParam('name', 'NO NAME');
+    const groupID = navigation.getParam('groupID', 'NO GROUP ID');
+    this.setState({author: screenName, group_id: groupID});
+  }
+
 
   render() {
+    const {navigation} = this.props;
+    const groupName = navigation.getParam('groupName', 'NO GROUP');
+    const screenName = navigation.getParam('name', 'NO NAME');
     let image = this.state.image;
     // uncomment for testing encoding and decoding
     // let author2 = this.state.author2;
@@ -37,12 +51,11 @@ export default class ShareConcept extends React.Component {
     return (
       <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text style={styles.getStartedText}>Share a concept with your group</Text>
-      <TextInput
-        style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-        onChangeText={(text) => this.setState({author:text})}
-        value={this.state.author}
-      />
+        <Image
+          style={{width: 300, height: 50}}
+          source={require('../assets/images/peerdea-logo-draft.png')}
+        />
+        <Text>Welcome to {groupName}, {screenName}</Text>
       <Button
         title="Pick an image from camera roll"
         onPress={this._pickImage}
@@ -84,7 +97,7 @@ export default class ShareConcept extends React.Component {
         credentials: 'same-origin',
         mode: 'same-origin',
         body: JSON.stringify({
-          group_id: "5cb7d06d5de2e75344837340",
+          group_id: this.state.group_id,
     		  name: this.state.author,
     		  media: { 
             data: buff, 
