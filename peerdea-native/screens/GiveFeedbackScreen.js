@@ -28,7 +28,7 @@ export default class GiveFeedback extends React.Component {
     const groupID = navigation.getParam('groupID', '5cc211a9a158040015716bac');
     console.log(groupID);
     this.setState({author: screenName, group_id: groupID});
-    const res = await fetch('http://128.237.116.125:3000/api/getConceptsByGroup?groupID=' + groupID, {method: 'GET'});
+    const res = await fetch('http://104.40.20.156/api/getConceptsByGroup?groupID=' + groupID, {method: 'GET'});
     const resJson = await res.json();
     concepts = resJson.data
     for (i = 0; i < resJson.data.length; i++) {
