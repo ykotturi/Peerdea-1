@@ -108,7 +108,7 @@ export default class ShareConcept extends React.Component {
       />
       </View>
       </ScrollView>
-     
+
     );
   }
 
@@ -116,7 +116,9 @@ export default class ShareConcept extends React.Component {
 
       
       // get requests to get users group keyword
-
+      var temp = []
+      for (i = 0; i < this.state.imagesBase64; i++){
+      }
       var buff = new Buffer(this.state.imageBase64, 'base64');
       
       let data = {
@@ -138,7 +140,7 @@ export default class ShareConcept extends React.Component {
           }
        }
         Alert.alert('Thanks for sharing!');
-        return fetch('http://104.40.20.156/api/putConcept', data)
+        return fetch('http://128.237.116.125:3000/api/putConcept', data)
         .then(function(response){
           return response.json();
         })
