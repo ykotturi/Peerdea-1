@@ -7,7 +7,7 @@ import HomeScreen from '../screens/HomeScreen';
 import LinksScreen from '../screens/LinksScreen';
 import CreateGroupScreen from '../screens/CreateGroupScreen';
 import ShareConceptScreen from '../screens/ShareConceptScreen';
-import JoinGroupScreen from '../screens/LinksScreen';
+import JoinGroupScreen from '../screens/JoinGroupScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import GiveFeedbackScreen from '../screens/GiveFeedbackScreen';
 
@@ -45,19 +45,19 @@ HomeStack.navigationOptions = ({navigation}) => {
   return navigationOptions;
 };
 
-const LinksStack = createStackNavigator({
-  Links: LinksScreen,
-});
+// const LinksStack = createStackNavigator({
+//   Links: LinksScreen,
+// });
 
-LinksStack.navigationOptions = {
-  tabBarLabel: 'Links',
-  tabBarIcon: ({ focused }) => (
-    <TabBarIcon
-      focused={focused}
-      name={Platform.OS === 'ios' ? 'ios-link' : 'md-link'}
-    />
-  ),
-};
+// LinksStack.navigationOptions = {
+//   tabBarLabel: 'Links',
+//   tabBarIcon: ({ focused }) => (
+//     <TabBarIcon
+//       focused={focused}
+//       name={Platform.OS === 'ios' ? 'ios-link' : 'md-link'}
+//     />
+//   ),
+// };
 
 const SettingsStack = createStackNavigator({
   Settings: SettingsScreen,
