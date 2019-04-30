@@ -14,8 +14,6 @@ import { Button,
 import { ImagePicker, 
          Permissions, 
          Camera } from 'expo';
-import { ConceptDescription } from '../components/ConceptDescription'; 
-import { ConceptAuthor } from '../components/ConceptAuthor'; 
 import { Buffer } from 'buffer';
 import Collapsible from 'react-native-collapsible';
 
@@ -39,7 +37,7 @@ export default class GiveFeedback extends React.Component {
     const groupID = navigation.getParam('groupID', '5cb7d06d5de2e75344837340');
     console.log(groupID);
     this.setState({author: screenName, group_id: groupID});
-    const res = await fetch('http://104.40.20.156/api/getConceptsByGroup?groupID=' + groupID, {method: 'GET'});
+    const res = await fetch('http://104.40.20.156/api/getConceptsByGroup?groupID=' + groupID, {method: 'GET'});  // to test locally, change to your machines IP address and append :3000
     const resJson = await res.json();
     concepts = resJson.data
     for (i = 0; i < resJson.data.length; i++) {
@@ -149,6 +147,8 @@ export default class GiveFeedback extends React.Component {
   _yesAnd = async (id) => {
     console.log("we are in _yesand");
     this.setState({modalVisible: true});
+    this.setState({thisConceptID: id});
+    console.log("THIS CONCEPT ID IS " + thisConceptID);
     //Update state for whether modal is visible
   }
 
