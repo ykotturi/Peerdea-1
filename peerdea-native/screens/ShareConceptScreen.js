@@ -117,9 +117,14 @@ export default class ShareConcept extends React.Component {
 
       // get requests to get users group keyword
       var temp = []
-      for (i = 0; i < this.state.imagesBase64; i++){
+      for (i = 0; i < this.state.imagesBase64.length; i++){
+          const buff = new Buffer(this.state.imagesBase64[i], 'base64');
+          const elem = {
+            data: buff,
+            contentType: 'image/png'};
+          temp.push(elem);
       }
-      var buff = new Buffer(this.state.imageBase64, 'base64');
+
 
       let data = {
         method: 'POST',
@@ -128,9 +133,7 @@ export default class ShareConcept extends React.Component {
         body: JSON.stringify({
           group_id: this.state.group_id,
     		  name: this.state.author,
-    		  media: {
-            data: buff,
-            contentType: 'image/png'},
+    		  media: temp,
     	      description: this.state.story,
         }),
         headers: {
