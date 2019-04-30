@@ -28,6 +28,7 @@ export default class GiveFeedback extends React.Component {
     group_id: null,
     concepts: [],
     modalVisible: false,
+    thisConceptID: null,
   };
 
 
@@ -107,7 +108,7 @@ export default class GiveFeedback extends React.Component {
       <Text style={styles.getStartedText}>Review Group Concepts</Text>
         { conceptViews }
       </View>
-       {this.state.modalVisible && <Modal
+      {this.state.modalVisible && <Modal
           animationType="slide"
           transparent={false}
           visible={true}
