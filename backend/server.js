@@ -109,7 +109,14 @@ router.get("/getConceptsByGroup", (req, res) => {
   });
 });
 
-
+//for testing yes and yesand backend
+router.get("/getConceptByID", (req, res) => {
+  var id = req.query.id;
+  Concept.find({"_id" : id}, (err, data) => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true, data: data});
+  });
+});
 
 // this is our update method
 // this method overwrites existing data in our database
@@ -117,6 +124,30 @@ router.post("/updateConcept", (req, res) => {
   const { id, update } = req.body;
   console.log(req.body);
   Concept.findOneAndUpdate({ "_id" : id}, update, err => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true });
+  });
+});
+
+// this method increments the number of yeses on a concept by one
+// mongoDB creates write locks automatically, each transaction is atomic
+router.post("/yes", (req, res) => {
+  const {id} = req.body;
+  Concept.findOneAndUpdate({ "_id": id}, { $inc: { "yes": 1 } }, err => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true });
+  });
+});
+
+// this method increments the number of yeses by one and also
+// pushes the comment onto the end of the list of comments
+router.post("/yesand", (req, res) => {
+  const {id, text} = req.body;
+  Concept.findOneAndUpdate({ "_id": id}, 
+    { 
+      $inc: { "yes": 1 }, 
+      $push: { "yesand": text} 
+    }, err => {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true });
   });
