@@ -145,12 +145,11 @@ export default class GiveFeedback extends React.Component {
               <Button raised 
                 onPress={() =>  
                     {
-                      this._sendFeedback(this.state.iWish, this.state.iLike);
+                      this._sendFeedback(this.state.iLike, this.state.iWish);
                       //after user send feedback, close modal and reset state for iLike and iWish, as user has decided to cancel submission of feedback
                       this.setState({ iLike: '',
                                       iWish: '',
                                       modalVisible:false,});
-                      this.rerenderConcepts();
                     }
                 }
                 title="Submit feedback"
@@ -186,40 +185,69 @@ export default class GiveFeedback extends React.Component {
   }
 
   _sendFeedback = (iLike, iWish) => {
-    let textToPost = '';
-    //first, figure out which sentence starter user completed
-    if (iLike.length > iWish.length) {
-      textToPost = iLike;
-    }
-    else 
-      textToPost = iWish;
 
-    let data = {
+    if (iLike.length > 0) {
+      let data = {
       method: 'POST',
       credentials: 'same-origin',
       mode: 'same-origin',
       body: JSON.stringify({
         id: this.state.thisConceptID,
-        text: textToPost,
+        text: iLike,
       }),
       headers: {
         'Accept':       'application/json',
         'Content-Type': 'application/json',
         // 'X-CSRFToken':  cookie.load('csrftoken')
         }
-     }
+       }
       return fetch('http://104.40.20.156/api/yesand', data) //if testing locally, insert your machines IP along with the port number set in server.js e.g. :3000
       .then(function(response){
         return response.json();
       })
       .then(function(json){
        console.log('suuccess');
+       this.rerenderConcepts();
       })
       .catch(function(error) {
       console.log('There has been a problem with your fetch operation: ' + error.message);
        // ADD THIS THROW error
         throw error;
       });
+    }
+
+    if (iWish.length > 0) {
+      let data2 = {
+      method: 'POST',
+      credentials: 'same-origin',
+      mode: 'same-origin',
+      body: JSON.stringify({
+        id: this.state.thisConceptID,
+        text: iWish,
+      }),
+      headers: {
+        'Accept':       'application/json',
+        'Content-Type': 'application/json',
+        // 'X-CSRFToken':  cookie.load('csrftoken')
+        }
+       }
+      return fetch('http://104.40.20.156/api/yesand', data2) //if testing locally, insert your machines IP along with the port number set in server.js e.g. :3000
+      .then(function(response){
+        return response.json();
+      })
+      .then(function(json){
+       console.log('suuccess');
+       this.rerenderConcepts();
+      })
+      .catch(function(error) {
+      console.log('There has been a problem with your fetch operation: ' + error.message);
+       // ADD THIS THROW error
+        throw error;
+      });
+    }
+
+    else
+      console.log('User did not input anything');
 
    }
 
