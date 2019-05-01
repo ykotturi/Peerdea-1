@@ -27,6 +27,7 @@ export default class GiveFeedback extends React.Component {
     group_id: null,
     concepts: [],
     modalVisible: false,
+    modalErrorMessage: '',
     thisConceptID: null,
     iLike: '',
     iWish: '',
@@ -110,6 +111,7 @@ export default class GiveFeedback extends React.Component {
               <Button title="Collapse" onPress={() => this._changeCollapse(index, true)}/>
               {yesAnds}
           </Collapsible>
+          <Text>  {"\n\n"} </Text>
 			</View>
 		)
 	}
@@ -127,6 +129,7 @@ export default class GiveFeedback extends React.Component {
             console.log('Modal is closed'); //onRequestClose is a required parameter of the Modal component
           }}>
           <View style={{marginTop: 100, alignItems:'center'}}>
+              <Text style={{color: 'red', fontWeight: 'bold'}}> {this.state.modalErrorMessage} </Text>
               <Text style={styles.getStartedText}>Enter your feedback:</Text>
               <View style={{flexDirection: 'row'}}> 
                 <TextInput
@@ -146,10 +149,7 @@ export default class GiveFeedback extends React.Component {
                 onPress={() =>  
                     {
                       this._sendFeedback(this.state.iLike, this.state.iWish);
-                      //after user send feedback, close modal and reset state for iLike and iWish, as user has decided to cancel submission of feedback
-                      this.setState({ iLike: '',
-                                      iWish: '',
-                                      modalVisible:false,});
+
                     }
                 }
                 title="Submit feedback"
@@ -159,7 +159,8 @@ export default class GiveFeedback extends React.Component {
               <TouchableHighlight
                 onPress={() => {
                   //if user decides to cancel, close modal and reset state for iLike and iWish, as user has decided to cancel submission of feedback
-                  this.setState({ iLike: '',
+                  this.setState({ modalErrorMessage: '',
+                                  iLike: '',
                                   iWish: '',
                                   modalVisible:false,});
                 }}>
@@ -172,115 +173,80 @@ export default class GiveFeedback extends React.Component {
     );
   }
 
-  // async rerenderConcepts() {
-  //   const {navigation} = this.props;
-  //   const groupID = navigation.getParam('groupID', '5cc211a9a158040015716bac');
-  //   const res = await fetch('http://104.40.20.156/api/getConceptsByGroup?groupID=' + groupID, {method: 'GET'});  // to test locally, change to your machines IP address and append :3000
-  //   const resJson = await res.json();
-  //   concepts = resJson.data
-  //   for (i = 0; i < resJson.data.length; i++) {
-  //       concepts[i].isCollapsed = true;
-  //   }
-  //   this.setState({concepts: concepts});
-  // }
-
-  _sendFeedback = (iLike, iWish) => {
-    let textToPost = '';
-    //first, figure out which sentence starter user completed
-    if (iLike.length > iWish.length) {
-      textToPost = iLike;
-    }
-    else 
-      textToPost = iWish;
-
-    let data = {
-      method: 'POST',
-      credentials: 'same-origin',
-      mode: 'same-origin',
-      body: JSON.stringify({
-        id: this.state.thisConceptID,
-        text: textToPost,
-      }),
-      headers: {
-        'Accept':       'application/json',
-        'Content-Type': 'application/json',
-        // 'X-CSRFToken':  cookie.load('csrftoken')
-        }
+   _rerenderConcepts = async () => {
+     const {navigation} = this.props;
+     const groupID = navigation.getParam('groupID', '5cc211a9a158040015716bac');
+     const res = await fetch('http://104.40.20.156/api/getConceptsByGroup?groupID=' + groupID, {method: 'GET'});  // to test locally, change to your machines IP address and append :3000
+     const resJson = await res.json();
+     concepts = resJson.data
+     for (i = 0; i < resJson.data.length; i++) {
+         concepts[i].isCollapsed = true;
      }
-      return fetch('http://104.40.20.156/api/yesand', data) //if testing locally, insert your machines IP along with the port number set in server.js e.g. :3000
-      .then(function(response){
-        return response.json();
-      })
-      .then(function(json){
-       console.log('suuccess');
-       // this.rerenderConcepts();
-      })
-      .catch(function(error) {
-      console.log('There has been a problem with your fetch operation: ' + error.message);
-       // ADD THIS THROW error
-        throw error;
-      });
+     this.setState({concepts: concepts});
+   }
 
+  _sendFeedback = async (iLike, iWish) => {
 
-    // if (iLike.length > 0) {
-    //   let data = {
-    //   method: 'POST',
-    //   credentials: 'same-origin',
-    //   mode: 'same-origin',
-    //   body: JSON.stringify({
-    //     id: this.state.thisConceptID,
-    //     text: iLike,
-    //   }),
-    //   headers: {
-    //     'Accept':       'application/json',
-    //     'Content-Type': 'application/json',
-    //     // 'X-CSRFToken':  cookie.load('csrftoken')
-    //     }
-    //    }
-    //   return fetch('http://104.40.20.156/api/yesand', data) //if testing locally, insert your machines IP along with the port number set in server.js e.g. :3000
-    //   .then(function(response){
-    //     return response.json();
-    //   })
-    //   .then(function(json){
-    //    console.log('suuccess');
-    //    this.rerenderConcepts();
-    //   })
-    //   .catch(function(error) {
-    //   console.log('There has been a problem with your fetch operation: ' + error.message);
-    //    // ADD THIS THROW error
-    //     throw error;
-    //   });
-    // }
+      var update = false;
 
-    // if (iWish.length > 0) {
-    //   let data2 = {
-    //   method: 'POST',
-    //   credentials: 'same-origin',
-    //   mode: 'same-origin',
-    //   body: JSON.stringify({
-    //     id: this.state.thisConceptID,
-    //     text: iWish,
-    //   }),
-    //   headers: {
-    //     'Accept':       'application/json',
-    //     'Content-Type': 'application/json',
-    //     // 'X-CSRFToken':  cookie.load('csrftoken')
-    //     }
-    //    }
-    //   return fetch('http://104.40.20.156/api/yesand', data2) //if testing locally, insert your machines IP along with the port number set in server.js e.g. :3000
-    //   .then(function(response){
-    //     return response.json();
-    //   })
-    //   .then(function(json){
-    //    console.log('suuccess');
-    //    this.rerenderConcepts();
-    //   })
-    //   .catch(function(error) {
-    //   console.log('There has been a problem with your fetch operation: ' + error.message);
-    //    // ADD THIS THROW error
-    //     throw error;
-    //   });
-    // }
+     if (iLike.length > 0) {
+       if (!iLike.startsWith("I like")){
+            this.setState({ modalErrorMessage: 'Feedback in first spot must start with I like'});
+            return;
+
+       }else{
+           let data = {
+           method: 'POST',
+           credentials: 'same-origin',
+           mode: 'same-origin',
+           body: JSON.stringify({
+             id: this.state.thisConceptID,
+             text: iLike,
+           }),
+           headers: {
+             'Accept':       'application/json',
+             'Content-Type': 'application/json',
+             // 'X-CSRFToken':  cookie.load('csrftoken')
+             }
+            }
+           const res = await fetch('http://104.40.20.156/api/yesand', data)
+            updated = true;
+        }//if testing locally, insert your machines IP along with the port number set in server.js e.g. :3000
+
+     }
+
+     if (iWish.length > 0) {
+        if (!iWish.startsWith("I wish")){
+            this.setState({ modalErrorMessage: 'Feedback in second spot must start with I wish'});
+            return;
+       }else{
+           let data2 = {
+           method: 'POST',
+           credentials: 'same-origin',
+           mode: 'same-origin',
+           body: JSON.stringify({
+             id: this.state.thisConceptID,
+             text: iWish,
+           }),
+           headers: {
+             'Accept':       'application/json',
+             'Content-Type': 'application/json',
+             // 'X-CSRFToken':  cookie.load('csrftoken')
+             }
+            }
+
+           const res = await fetch('http://104.40.20.156/api/yesand', data2);
+            updated = true;
+         }//if testing locally, insert your machines IP along with the port number set in server.js e.g. :3000
+     }
+     if (updated){
+        this._rerenderConcepts();
+        //after user send feedback, close modal and reset state for iLike and iWish, as user has decided to cancel submission of feedback
+        this.setState({ iLike: '',
+                      modalErrorMessage: '',
+                      iWish: '',
+                      modalVisible:false,});
+     }
 
     // else
     //   console.log('User did not input anything');
@@ -296,7 +262,21 @@ export default class GiveFeedback extends React.Component {
   }
 
   _yes = async (id) => {
-        Alert.alert('Yes ' + id );
+     let data = {
+       method: 'POST',
+       credentials: 'same-origin',
+       mode: 'same-origin',
+       body: JSON.stringify({
+         id: id
+       }),
+       headers: {
+         'Accept':       'application/json',
+         'Content-Type': 'application/json',
+         // 'X-CSRFToken':  cookie.load('csrftoken')
+         }
+        }
+       const res = await fetch('http://104.40.20.156/api/yes', data)
+       this._rerenderConcepts();
   }
 
 // id here is the concept id
