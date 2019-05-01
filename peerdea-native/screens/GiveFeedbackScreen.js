@@ -28,6 +28,8 @@ export default class GiveFeedback extends React.Component {
     concepts: [],
     modalVisible: false,
     thisConceptID: null,
+    iLike: '',
+    iWish: '',
   };
 
 
@@ -137,22 +139,95 @@ export default class GiveFeedback extends React.Component {
           transparent={false}
           visible={true}
           onRequestClose={() => {
-            Alert.alert('Modal has been closed.');
+            console.log('Modal is closed'); //onRequestClose is a required parameter of the Modal component
           }}>
-          <View style={{marginTop: 22}}>
-              <Text>Hello World!</Text>
-          </View>
-             <TouchableHighlight
+          <View style={{marginTop: 100, alignItems:'center'}}>
+              <Text style={styles.getStartedText}>Enter your feedback:</Text>
+              <View style={{flexDirection: 'row'}}> 
+                <TextInput
+                  style={{height: 40, flex: 0.5, borderColor: 'gray', borderWidth: 1}}
+                  onChangeText={(text) => this.setState({iLike: text})}
+                  placeholder="I like..."
+                />
+              </View>
+              <View style={{flexDirection: 'row'}}> 
+                <TextInput
+                  style={{height: 40, flex: 0.5, borderColor: 'gray', borderWidth: 1}}
+                  onChangeText={(text) => this.setState({iWish: text})}
+                  placeholder="I wish..."
+                />
+              </View>
+              <Button raised 
+                onPress={() =>  
+                    
+                    //{ this._sendFeedback();}}
+                    console.log("I WISH IS " + this.state.iWish)
+                 }
+                title="Submit feedback"
+                color="#841584"
+                accessibilityLabel="Submit feedback"
+              />
+              <TouchableHighlight
                 onPress={() => {
-                  this.setState({modalVisible:false});
+                  //close modal and reset state for iLike and iWish, as user has decided to cancel submission of feedback
+                  this.setState({ iLike: '',
+                                  iWish: '',
+                                  modalVisible:false,});
                 }}>
-                <Text>Hide Modal</Text>
+                <Text>Cancel</Text>
               </TouchableHighlight>
+            </View>
+          
         </Modal>
       }
       </ScrollView>
     );
   }
+
+
+  _sendFeedback = () => {
+
+// router.post("/yesand", (req, res) => {
+//   const {id, text} = req.body;
+//   Concept.findOneAndUpdate({ "_id": id}, 
+//     { 
+//       $inc: { "yes": 1 }, 
+//       $push: { "yesand": text} 
+//     }, err => {
+//     if (err) return res.json({ success: false, error: err });
+//     return res.json({ success: true });
+//   });
+// });
+
+
+      let data = {
+        method: 'POST',
+        credentials: 'same-origin',
+        mode: 'same-origin',
+        body: JSON.stringify({
+          //TODO
+        }),
+        headers: {
+          'Accept':       'application/json',
+          'Content-Type': 'application/json',
+          // 'X-CSRFToken':  cookie.load('csrftoken')
+          }
+       }
+        Alert.alert('Thanks for sharing!');
+        return fetch('http://2601:547:500:d509:ec40:957:e5de:c048:3000/api/yesand', data)
+        .then(function(response){
+          return response.json();
+        })
+        .then(function(json){
+         console.log('suuccess');
+        })
+        .catch(function(error) {
+        console.log('There has been a problem with your fetch operation: ' + error.message);
+         // ADD THIS THROW error
+          throw error;
+        });
+
+   }
 
   _changeCollapse = async (index, val) => {
         console.log(val)
@@ -172,9 +247,12 @@ export default class GiveFeedback extends React.Component {
 // id here is the concept id
   _yesAnd = async (id) => {
     console.log("we are in _yesand");
-    this.setState({modalVisible: true});
-    this.setState({thisConceptID: id});
-    console.log("THIS CONCEPT ID IS " + thisConceptID);
+    console.log("ID IS " + id);
+    //interestingly, the order in which you update state variable in setState matters
+    //thisConceptID must be updated before modalVisible
+    this.setState({thisConceptID: id,
+                   modalVisible: true});
+    console.log("THIS CONCEPT ID IS " + this.state.thisConceptID);
     //Update state for whether modal is visible
   }
 
@@ -190,8 +268,9 @@ export default class GiveFeedback extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
+    paddingTop: 30,
+    paddingBottom: 30, 
+    flex: 1, 
   },
   getStartedText: {
     fontSize: 17,
