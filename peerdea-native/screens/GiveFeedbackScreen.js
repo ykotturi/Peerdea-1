@@ -172,82 +172,119 @@ export default class GiveFeedback extends React.Component {
     );
   }
 
-  async rerenderConcepts() {
-    const {navigation} = this.props;
-    const groupID = navigation.getParam('groupID', '5cc211a9a158040015716bac');
-    const res = await fetch('http://104.40.20.156/api/getConceptsByGroup?groupID=' + groupID, {method: 'GET'});  // to test locally, change to your machines IP address and append :3000
-    const resJson = await res.json();
-    concepts = resJson.data
-    for (i = 0; i < resJson.data.length; i++) {
-        concepts[i].isCollapsed = true;
-    }
-    this.setState({concepts: concepts});
-  }
+  // async rerenderConcepts() {
+  //   const {navigation} = this.props;
+  //   const groupID = navigation.getParam('groupID', '5cc211a9a158040015716bac');
+  //   const res = await fetch('http://104.40.20.156/api/getConceptsByGroup?groupID=' + groupID, {method: 'GET'});  // to test locally, change to your machines IP address and append :3000
+  //   const resJson = await res.json();
+  //   concepts = resJson.data
+  //   for (i = 0; i < resJson.data.length; i++) {
+  //       concepts[i].isCollapsed = true;
+  //   }
+  //   this.setState({concepts: concepts});
+  // }
 
   _sendFeedback = (iLike, iWish) => {
+    let textToPost = '';
+    //first, figure out which sentence starter user completed
+    if (iLike.length > iWish.length) {
+      textToPost = iLike;
+    }
+    else 
+      textToPost = iWish;
 
-    if (iLike.length > 0) {
-      let data = {
+    let data = {
       method: 'POST',
       credentials: 'same-origin',
       mode: 'same-origin',
       body: JSON.stringify({
         id: this.state.thisConceptID,
-        text: iLike,
+        text: textToPost,
       }),
       headers: {
         'Accept':       'application/json',
         'Content-Type': 'application/json',
         // 'X-CSRFToken':  cookie.load('csrftoken')
         }
-       }
+     }
       return fetch('http://104.40.20.156/api/yesand', data) //if testing locally, insert your machines IP along with the port number set in server.js e.g. :3000
       .then(function(response){
         return response.json();
       })
       .then(function(json){
        console.log('suuccess');
-       this.rerenderConcepts();
+       // this.rerenderConcepts();
       })
       .catch(function(error) {
       console.log('There has been a problem with your fetch operation: ' + error.message);
        // ADD THIS THROW error
         throw error;
       });
-    }
 
-    if (iWish.length > 0) {
-      let data2 = {
-      method: 'POST',
-      credentials: 'same-origin',
-      mode: 'same-origin',
-      body: JSON.stringify({
-        id: this.state.thisConceptID,
-        text: iWish,
-      }),
-      headers: {
-        'Accept':       'application/json',
-        'Content-Type': 'application/json',
-        // 'X-CSRFToken':  cookie.load('csrftoken')
-        }
-       }
-      return fetch('http://104.40.20.156/api/yesand', data2) //if testing locally, insert your machines IP along with the port number set in server.js e.g. :3000
-      .then(function(response){
-        return response.json();
-      })
-      .then(function(json){
-       console.log('suuccess');
-       this.rerenderConcepts();
-      })
-      .catch(function(error) {
-      console.log('There has been a problem with your fetch operation: ' + error.message);
-       // ADD THIS THROW error
-        throw error;
-      });
-    }
 
-    else
-      console.log('User did not input anything');
+    // if (iLike.length > 0) {
+    //   let data = {
+    //   method: 'POST',
+    //   credentials: 'same-origin',
+    //   mode: 'same-origin',
+    //   body: JSON.stringify({
+    //     id: this.state.thisConceptID,
+    //     text: iLike,
+    //   }),
+    //   headers: {
+    //     'Accept':       'application/json',
+    //     'Content-Type': 'application/json',
+    //     // 'X-CSRFToken':  cookie.load('csrftoken')
+    //     }
+    //    }
+    //   return fetch('http://104.40.20.156/api/yesand', data) //if testing locally, insert your machines IP along with the port number set in server.js e.g. :3000
+    //   .then(function(response){
+    //     return response.json();
+    //   })
+    //   .then(function(json){
+    //    console.log('suuccess');
+    //    this.rerenderConcepts();
+    //   })
+    //   .catch(function(error) {
+    //   console.log('There has been a problem with your fetch operation: ' + error.message);
+    //    // ADD THIS THROW error
+    //     throw error;
+    //   });
+    // }
+
+    // if (iWish.length > 0) {
+    //   let data2 = {
+    //   method: 'POST',
+    //   credentials: 'same-origin',
+    //   mode: 'same-origin',
+    //   body: JSON.stringify({
+    //     id: this.state.thisConceptID,
+    //     text: iWish,
+    //   }),
+    //   headers: {
+    //     'Accept':       'application/json',
+    //     'Content-Type': 'application/json',
+    //     // 'X-CSRFToken':  cookie.load('csrftoken')
+    //     }
+    //    }
+    //   return fetch('http://104.40.20.156/api/yesand', data2) //if testing locally, insert your machines IP along with the port number set in server.js e.g. :3000
+    //   .then(function(response){
+    //     return response.json();
+    //   })
+    //   .then(function(json){
+    //    console.log('suuccess');
+    //    this.rerenderConcepts();
+    //   })
+    //   .catch(function(error) {
+    //   console.log('There has been a problem with your fetch operation: ' + error.message);
+    //    // ADD THIS THROW error
+    //     throw error;
+    //   });
+    // }
+
+    // else
+    //   console.log('User did not input anything');
+
 
    }
 
