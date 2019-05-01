@@ -51,30 +51,28 @@ export default class GiveFeedback extends React.Component {
 
   render() {
     var conceptViews = [];
-    console.log("here");
-    console.log("MODAL VISIBLE IS " + this.state.modalVisible);
-
-
-      //render all concepts w/ appended interactions
-	    for (i = 0; i < this.state.concepts.length; i++) {
-        const concept = this.state.concepts[i];
-        const index = i;
-        var yesAndViews = []
-        for (j = 0; j < concept.yesand.length; j++){
-            const yesandText = concept.yesand[j];
-            yesAndViews.push(
-				      <Text key = {j}> {yesandText} </Text>
-            )
-        }
-        const yesAnds = yesAndViews;
-        var images = [];
-        for (imageI = 0; imageI < concept.media.length; imageI++){
-            const buff = new Buffer(concept.media[imageI].data);
-            const base64data = buff.toString('base64');
-            const uriString = `data:image/gif;base64,${base64data}`;
-            images.push(uriString);
-        }
-        const finalImages = images;
+    //console.log("here");
+    //console.log("MODAL VISIBLE IS " + this.state.modalVisible);
+    //render all concepts w/ appended interactions
+    for (i = 0; i < this.state.concepts.length; i++) {
+      const concept = this.state.concepts[i];
+      const index = i;
+      var yesAndViews = []
+      for (j = 0; j < concept.yesand.length; j++){
+          const yesandText = concept.yesand[j];
+          yesAndViews.push(
+			      <Text key = {j}> {yesandText} </Text>
+          )
+      }
+      const yesAnds = yesAndViews;
+      var images = [];
+      for (imageI = 0; imageI < concept.media.length; imageI++){
+          const buff = new Buffer(concept.media[imageI].data);
+          const base64data = buff.toString('base64');
+          const uriString = `data:image/gif;base64,${base64data}`;
+          images.push(uriString);
+      }
+      const finalImages = images;
 		  conceptViews.push(
 			<View key = {i} style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
 				<View style={{flex: 1}}>
