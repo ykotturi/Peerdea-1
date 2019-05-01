@@ -213,7 +213,7 @@ export default class GiveFeedback extends React.Component {
         }
      }
       Alert.alert('Thanks for sharing!');
-      return fetch('http://2601:547:500:d509:ec40:957:e5de:c048:3000/api/yesand', data)
+      return fetch('http://128.237.132.205:3000/api/yesand', data)
       .then(function(response){
         return response.json();
       })
@@ -238,10 +238,6 @@ export default class GiveFeedback extends React.Component {
   _yes = async (id) => {
         Alert.alert('Yes ' + id );
   }
-
-  // setModalVisible(visible) {
-  //   this.setState({modalVisible: visible});
-  // }
 
 // id here is the concept id
   _yesAnd = async (id) => {
