@@ -146,7 +146,7 @@ export default class GiveFeedback extends React.Component {
                 onPress={() =>  
                     {
                       this._sendFeedback(this.state.iWish, this.state.iLike);
-                      //close modal and reset state for iLike and iWish, as user has decided to cancel submission of feedback
+                      //after user send feedback, close modal and reset state for iLike and iWish, as user has decided to cancel submission of feedback
                       this.setState({ iLike: '',
                                       iWish: '',
                                       modalVisible:false,});
@@ -158,7 +158,7 @@ export default class GiveFeedback extends React.Component {
               />
               <TouchableHighlight
                 onPress={() => {
-                  //close modal and reset state for iLike and iWish, as user has decided to cancel submission of feedback
+                  //if user decides to cancel, close modal and reset state for iLike and iWish, as user has decided to cancel submission of feedback
                   this.setState({ iLike: '',
                                   iWish: '',
                                   modalVisible:false,});
@@ -211,7 +211,7 @@ export default class GiveFeedback extends React.Component {
    }
 
   _changeCollapse = async (index, val) => {
-        console.log(val)
+        //console.log(val)
         concepts2 = this.state.concepts;
         concepts2[index].isCollapsed = val;
         this.setState({concepts: concepts2});
@@ -223,8 +223,8 @@ export default class GiveFeedback extends React.Component {
 
 // id here is the concept id
   _yesAnd = async (id) => {
-    console.log("we are in _yesand");
-    console.log("ID IS " + id);
+    // console.log("we are in _yesand");
+    // console.log("ID IS " + id);
     //interestingly, the order in which you update state variable in setState matters
     //thisConceptID must be updated before modalVisible
     this.setState({thisConceptID: id,
