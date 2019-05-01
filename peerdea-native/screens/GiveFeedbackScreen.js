@@ -160,8 +160,8 @@ export default class GiveFeedback extends React.Component {
               <Button raised 
                 onPress={() =>  
                     
-                    //{ this._sendFeedback();}}
-                    console.log("I WISH IS " + this.state.iWish)
+                    {this._sendFeedback(this.state.iWish, this.state.iLike);}
+                    
                  }
                 title="Submit feedback"
                 color="#841584"
@@ -185,47 +185,46 @@ export default class GiveFeedback extends React.Component {
   }
 
 
-  _sendFeedback = () => {
 
-// router.post("/yesand", (req, res) => {
-//   const {id, text} = req.body;
-//   Concept.findOneAndUpdate({ "_id": id}, 
-//     { 
-//       $inc: { "yes": 1 }, 
-//       $push: { "yesand": text} 
-//     }, err => {
-//     if (err) return res.json({ success: false, error: err });
-//     return res.json({ success: true });
-//   });
-// });
+  _sendFeedback = (iLike, iWish) => {
+    let textToPost = '';
 
+    //first, figure out which sentence starter user completed
+    if (iLike.length > iWish.length) {
+      textToPost = iLike;
+    }
+    else 
+      textToPost = iWish;
 
-      let data = {
-        method: 'POST',
-        credentials: 'same-origin',
-        mode: 'same-origin',
-        body: JSON.stringify({
-          //TODO
-        }),
-        headers: {
-          'Accept':       'application/json',
-          'Content-Type': 'application/json',
-          // 'X-CSRFToken':  cookie.load('csrftoken')
-          }
-       }
-        Alert.alert('Thanks for sharing!');
-        return fetch('http://2601:547:500:d509:ec40:957:e5de:c048:3000/api/yesand', data)
-        .then(function(response){
-          return response.json();
-        })
-        .then(function(json){
-         console.log('suuccess');
-        })
-        .catch(function(error) {
-        console.log('There has been a problem with your fetch operation: ' + error.message);
-         // ADD THIS THROW error
-          throw error;
-        });
+    console.log("TEXT TO POST IS " + textToPost);
+
+    let data = {
+      method: 'POST',
+      credentials: 'same-origin',
+      mode: 'same-origin',
+      body: JSON.stringify({
+        id: this.state.thisConceptID,
+        text: textToPost,
+      }),
+      headers: {
+        'Accept':       'application/json',
+        'Content-Type': 'application/json',
+        // 'X-CSRFToken':  cookie.load('csrftoken')
+        }
+     }
+      Alert.alert('Thanks for sharing!');
+      return fetch('http://2601:547:500:d509:ec40:957:e5de:c048:3000/api/yesand', data)
+      .then(function(response){
+        return response.json();
+      })
+      .then(function(json){
+       console.log('suuccess');
+      })
+      .catch(function(error) {
+      console.log('There has been a problem with your fetch operation: ' + error.message);
+       // ADD THIS THROW error
+        throw error;
+      });
 
    }
 
