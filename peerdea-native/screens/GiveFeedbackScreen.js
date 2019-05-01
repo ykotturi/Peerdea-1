@@ -150,6 +150,7 @@ export default class GiveFeedback extends React.Component {
                       this.setState({ iLike: '',
                                       iWish: '',
                                       modalVisible:false,});
+                      this.rerenderConcepts();
                     }
                 }
                 title="Submit feedback"
@@ -170,6 +171,18 @@ export default class GiveFeedback extends React.Component {
       }
       </ScrollView>
     );
+  }
+
+  async rerenderConcepts() {
+    const {navigation} = this.props;
+    const groupID = navigation.getParam('groupID', '5cc211a9a158040015716bac');
+    const res = await fetch('http://104.40.20.156/api/getConceptsByGroup?groupID=' + groupID, {method: 'GET'});  // to test locally, change to your machines IP address and append :3000
+    const resJson = await res.json();
+    concepts = resJson.data
+    for (i = 0; i < resJson.data.length; i++) {
+        concepts[i].isCollapsed = true;
+    }
+    this.setState({concepts: concepts});
   }
 
   _sendFeedback = (iLike, iWish) => {
