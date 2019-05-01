@@ -32,9 +32,6 @@ export default class GiveFeedback extends React.Component {
     iWish: '',
   };
 
-
-
-
   async componentDidMount() {
     const {navigation} = this.props;
     const screenName = navigation.getParam('name', 'NO NAME');
@@ -48,16 +45,9 @@ export default class GiveFeedback extends React.Component {
     for (i = 0; i < resJson.data.length; i++) {
         concepts[i].isCollapsed = true;
     }
-    // for (i = 0; i < resJson.data.length; i++) {
-    //     concepts[i].showModal = false;
-    // }
     this.setState({concepts: concepts});
 
   }
-
-
-
-
 
   render() {
     var conceptViews = [];
@@ -88,43 +78,40 @@ export default class GiveFeedback extends React.Component {
 		  conceptViews.push(
 			<View key = {i} style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
 				<View style={{flex: 1}}>
-                  <ImageCarousel
-                        renderContent={(idx: number) => (
-                            <Image
-                              style={StyleSheet.absoluteFill}
-                              resizeMode="contain"
-                              source={{uri: finalImages[idx]}}
-                            />
-                          )}>
-                        {finalImages.map(url => (
-                          <Image
-                            style={{ width: 200, height: 200 }}
-                            key={url}
-                            source={{uri: url}}
-                            resizeMode="contain"
-                          />
-                        ))}
-                 </ImageCarousel>
-              </View>
-                <Text> {concept.name} </Text>
-                <Text> {concept.description} </Text>
-                <TouchableOpacity style={styles.btn}  onPress = {() => { this._yes(concept._id);}}>
-                   <Text>Yes {concept.yes}</Text>
-                   <Image source={require('../assets/images/heart.png')}  style={{width: 20, height: 20}}/>
-
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.btn} onPress = {() => { this._yesAnd(concept._id);}}>
-                    <Text>Yes And</Text>
-                    <Image source={require('../assets/images/heart.png')}  style={{ width: 20, height: 20}}/>
-
-
-                </TouchableOpacity>
-                {concept.isCollapsed &&
-                    <Button title="Expand" onPress={() => this._changeCollapse(index, false)}/>}
-                <Collapsible collapsed={concept.isCollapsed}>
-                    <Button title="Collapse" onPress={() => this._changeCollapse(index, true)}/>
-                    {yesAnds}
-                </Collapsible>
+          <ImageCarousel
+            renderContent={(idx: number) => (
+                <Image
+                  style={StyleSheet.absoluteFill}
+                  resizeMode="contain"
+                  source={{uri: finalImages[idx]}}
+                />
+              )}>
+            {finalImages.map(url => (
+              <Image
+                style={{ width: 200, height: 200 }}
+                key={url}
+                source={{uri: url}}
+                resizeMode="contain"
+              />
+            ))}
+           </ImageCarousel>
+         </View>
+          <Text> {concept.name} </Text>
+          <Text> {concept.description} </Text>
+          <TouchableOpacity style={styles.btn}  onPress = {() => { this._yes(concept._id);}}>
+             <Text>Yes {concept.yes}</Text>
+             <Image source={require('../assets/images/heart.png')}  style={{width: 20, height: 20}}/>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.btn} onPress = {() => { this._yesAnd(concept._id);}}>
+              <Text>Yes And</Text>
+              <Image source={require('../assets/images/heart.png')}  style={{ width: 20, height: 20}}/>
+          </TouchableOpacity>
+          {concept.isCollapsed &&
+              <Button title="Expand" onPress={() => this._changeCollapse(index, false)}/>}
+          <Collapsible collapsed={concept.isCollapsed}>
+              <Button title="Collapse" onPress={() => this._changeCollapse(index, true)}/>
+              {yesAnds}
+          </Collapsible>
 			</View>
 		)
 	}
@@ -159,10 +146,14 @@ export default class GiveFeedback extends React.Component {
               </View>
               <Button raised 
                 onPress={() =>  
-                    
-                    {this._sendFeedback(this.state.iWish, this.state.iLike);}
-                    
-                 }
+                    {
+                      this._sendFeedback(this.state.iWish, this.state.iLike);
+                      //close modal and reset state for iLike and iWish, as user has decided to cancel submission of feedback
+                      this.setState({ iLike: '',
+                                      iWish: '',
+                                      modalVisible:false,});
+                    }
+                }
                 title="Submit feedback"
                 color="#841584"
                 accessibilityLabel="Submit feedback"
@@ -177,26 +168,20 @@ export default class GiveFeedback extends React.Component {
                 <Text>Cancel</Text>
               </TouchableHighlight>
             </View>
-          
         </Modal>
       }
       </ScrollView>
     );
   }
 
-
-
   _sendFeedback = (iLike, iWish) => {
     let textToPost = '';
-
     //first, figure out which sentence starter user completed
     if (iLike.length > iWish.length) {
       textToPost = iLike;
     }
     else 
       textToPost = iWish;
-
-    console.log("TEXT TO POST IS " + textToPost);
 
     let data = {
       method: 'POST',
@@ -212,8 +197,7 @@ export default class GiveFeedback extends React.Component {
         // 'X-CSRFToken':  cookie.load('csrftoken')
         }
      }
-      Alert.alert('Thanks for sharing!');
-      return fetch('http://128.237.132.205:3000/api/yesand', data)
+      return fetch('http://104.40.20.156/api/yesand', data) //if testing locally, insert your machines IP along with the port number set in server.js e.g. :3000
       .then(function(response){
         return response.json();
       })
@@ -247,17 +231,7 @@ export default class GiveFeedback extends React.Component {
     //thisConceptID must be updated before modalVisible
     this.setState({thisConceptID: id,
                    modalVisible: true});
-    console.log("THIS CONCEPT ID IS " + this.state.thisConceptID);
-    //Update state for whether modal is visible
   }
-
-//this is called on Modal's onRequest close
-  // _closeYesAnd = async (id) => {
-  //   console.log("we are in _closeyesand");
-  //   this.setState({modalVisible: false);
-  //   //fire post request
-  //   //Update state for whether modal is visible
-  // }
 }
 
 
