@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 import {
   Image,
   Platform,
@@ -7,12 +7,13 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Alert,
+  Alert
 } from 'react-native';
 import { Button } from 'react-native-elements';
 import { WebBrowser } from 'expo';
 
 import { MonoText } from '../components/StyledText';
+
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -50,6 +51,8 @@ export default class HomeScreen extends React.Component {
       </View>
     );
   }
+
+
 
   _maybeRenderDevelopmentModeWarning() {
     if (__DEV__) {

@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { Button, Image, View, StyleSheet, Text, TouchableOpacity, TextInput, Alert, ScrollView } from 'react-native';
 // because we're using mangaged apps version of expo (and not bare version):
 import { ImagePicker, Permissions, Camera } from 'expo';
-import { ConceptDescription } from '../components/ConceptDescription';
-import { ConceptAuthor } from '../components/ConceptAuthor';
+
+
+
 import { Buffer } from 'buffer';
 import ImageCarousel from 'react-native-image-carousel';
 
@@ -37,7 +38,7 @@ export default class ShareConcept extends React.Component {
       await Permissions.askAsync(Permissions.CAMERA);
       // probably need to do something to verify that permissions
       // were actually granted
-   };
+  };
 
   componentDidMount() {
     const {navigation} = this.props;
