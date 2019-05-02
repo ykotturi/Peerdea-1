@@ -47,13 +47,6 @@ export default class HomeScreen extends React.Component {
             color="#841584"
             accessibilityLabel="Join an existing group"
           />
-
-          <Button
-            onPress={() => navigate('GiveFeedback')}
-            title="Give Feedback"
-            color="#841584"
-            accessibilityLabel="Give Feedback"
-          />
       </View>
     );
   }

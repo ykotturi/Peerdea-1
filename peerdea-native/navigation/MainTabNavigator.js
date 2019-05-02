@@ -17,11 +17,19 @@ const HomeStack = createStackNavigator({
     screen: HomeScreen,
     navigationOptions: {
       title: 'Home'
-    }},
-  CreateGroup: {screen: CreateGroupScreen},
-  JoinGroup: {screen: JoinGroupScreen},
-  ShareConcept: {screen: ShareConceptScreen},
-  GiveFeedback: {screen: GiveFeedbackScreen},
+  }},
+  CreateGroup: {
+    screen: CreateGroupScreen,
+    navigationOptions: {
+      title: 'Create a Group'
+    }
+  },
+  JoinGroup: {
+    screen: JoinGroupScreen,
+    navigationOptions: {
+      title: 'Join a Group'
+    }
+  },
 });
 
 HomeStack.navigationOptions = ({navigation}) => {
@@ -38,26 +46,38 @@ HomeStack.navigationOptions = ({navigation}) => {
         }
       />
     ),
-  };
-  if (routeName === 'Home') {
-    navigationOptions.tabBarVisible = false;
+    tabBarVisible: false
   };
   return navigationOptions;
 };
 
-// const LinksStack = createStackNavigator({
-//   Links: LinksScreen,
-// });
+const ShareConceptStack = createStackNavigator({
+  ShareConcept: {screen: ShareConceptScreen},
+})
 
-// LinksStack.navigationOptions = {
-//   tabBarLabel: 'Links',
-//   tabBarIcon: ({ focused }) => (
-//     <TabBarIcon
-//       focused={focused}
-//       name={Platform.OS === 'ios' ? 'ios-link' : 'md-link'}
-//     />
-//   ),
-// };
+ShareConceptStack.navigationOptions = {
+  tabBarLabel: 'Share Concepts',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+        focused={focused}
+        name={Platform.OS === 'ios' ? 'ios-images' : 'md-images'}
+      />
+  ),
+};
+
+const GiveFeedbackStack = createStackNavigator({
+  GiveFeedback: GiveFeedbackScreen,
+})
+
+GiveFeedbackStack.navigationOptions = {
+  tabBarLabel: 'Give Feedback',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+        focused={focused}
+        name={Platform.OS === 'ios' ? 'ios-heart' : 'md-heart'}
+      />
+  ),
+};
 
 const SettingsStack = createStackNavigator({
   Settings: SettingsScreen,
@@ -78,6 +98,12 @@ export default createBottomTabNavigator({
     screen: HomeStack
   },
   Second: {
+    screen: ShareConceptStack
+  },
+  Third: {
+    screen: GiveFeedbackStack
+  },
+  Fourth: {
     screen: SettingsStack
   }
 });
