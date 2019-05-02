@@ -107,3 +107,4 @@ export default createBottomTabNavigator({
     screen: SettingsStack
   }
 });
+

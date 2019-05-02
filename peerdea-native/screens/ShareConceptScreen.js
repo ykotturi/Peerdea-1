@@ -24,11 +24,6 @@ export default class ShareConcept extends React.Component {
     group_id: ''
   };
 
-
-
-
-
-
   renderImage = (idx: number) => (
     <Image
       style={StyleSheet.absoluteFill}
@@ -36,9 +31,6 @@ export default class ShareConcept extends React.Component {
       source={{uri: this.state.images[idx]}}
     />
   );
-
-
-
 
   askPermissionsAsync = async () => {
       await Permissions.askAsync(Permissions.CAMERA_ROLL);
@@ -51,6 +43,12 @@ export default class ShareConcept extends React.Component {
     const {navigation} = this.props;
     const screenName = navigation.getParam('name', 'NO NAME');
     const groupID = navigation.getParam('groupID', 'NO GROUP ID');
+    this.setState({author: screenName, group_id: groupID});
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const screenName = nextProps.navigation.getParam('name', 'NO NAME');
+    const groupID = nextProps.navigation.getParam('groupID', 'NO GROUP ID');
     this.setState({author: screenName, group_id: groupID});
   }
 
@@ -124,9 +122,6 @@ export default class ShareConcept extends React.Component {
   }
 
   _sendConcept = () => {
-      const {navigation} = this.props;
-      const screenName = navigation.getParam('name', 'NO NAME');
-      const groupID = navigation.getParam('groupID', 'NO GROUP ID');
 
       // get requests to get users group keyword
       var temp = []
@@ -138,14 +133,14 @@ export default class ShareConcept extends React.Component {
           temp.push(elem);
       }
 
-
+      console.log(this.state.author);
       let data = {
         method: 'POST',
         credentials: 'same-origin',
         mode: 'same-origin',
         body: JSON.stringify({
-          group_id: groupID,
-    		  name: screenName,
+          group_id: this.state.group_id,
+    		  name: this.state.author,
     		  media: temp,
     	      description: this.state.story,
         }),
@@ -162,16 +157,7 @@ export default class ShareConcept extends React.Component {
         })
         .then(function(json){
           console.log('suuccess');
-          Alert.alert('Thanks for sharing!','',
-          [
-            {text: 'OK', onPress: () => 
-              navigation.navigate('GiveFeedback', {
-              groupID: groupID,
-              name: screenName
-            })},
-          ], 
-          {cancelable: false}
-        );
+          Alert.alert('Thanks for sharing!');
         })
         .catch(function(error) {
         console.log('There has been a problem with your fetch operation: ' + error.message);

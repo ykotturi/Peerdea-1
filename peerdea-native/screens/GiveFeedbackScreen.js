@@ -18,29 +18,44 @@ export default class GiveFeedback extends React.Component {
     concepts: []
   };
 
-
-
-
-  async componentDidMount() {
+  componentDidMount() {
     const {navigation} = this.props;
+    // this._navListener = navigation.addListener('didFocus', () => {
     const screenName = navigation.getParam('name', 'NO NAME');
     console.log(screenName);
     const groupID = navigation.getParam('groupID', '5cc211a9a158040015716bac');
     console.log(groupID);
     this.setState({author: screenName, group_id: groupID});
-    const res = await fetch('http://104.40.20.156/api/getConceptsByGroup?groupID=' + groupID, {method: 'GET'});
-    const resJson = await res.json();
-    concepts = resJson.data
-    for (i = 0; i < resJson.data.length; i++) {
-        concepts[i].isCollapsed = true;
-    }
-    this.setState({concepts: concepts});
+    this.getConcepts(groupID);
+    // });
+  };
 
+  componentWillReceiveProps(nextProps) {
+    const screenName = nextProps.navigation.getParam('name', 'NO NAME');
+    const groupID = nextProps.navigation.getParam('groupID', '5cc211a9a158040015716bac');
+    this.setState({author: screenName, group_id: groupID});
+    this.getConcepts(groupID);
+  };
+
+  getConcepts(groupid) {
+    let self = this;
+    console.log('groupid get concepts ' + groupid);
+    fetch('http://104.40.20.156/api/getConceptsByGroup?groupID=' + groupid, {method: 'GET'})
+      .then(function(res) {
+        return res.json();
+      })
+      .then(function(json) {
+        concepts = json.data;
+        for (i = 0; i < json.data.length; i++) {
+          concepts[i].isCollapsed = true;
+        }
+        self.setState({concepts: concepts});
+      })
+      .catch(function(err) {
+        console.log(err);
+        throw(err);
+      })
   }
-
-
-
-
 
   render() {
     var conceptViews = [];
