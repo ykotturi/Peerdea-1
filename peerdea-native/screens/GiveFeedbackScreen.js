@@ -33,21 +33,34 @@ export default class GiveFeedback extends React.Component {
     iWish: '',
   };
 
-  async componentDidMount() {
+  componentDidMount() {
     const {navigation} = this.props;
+    // this._navListener = navigation.addListener('didFocus', () => {
     const screenName = navigation.getParam('name', 'NO NAME');
     console.log(screenName);
     const groupID = navigation.getParam('groupID', '5cc211a9a158040015716bac');
     console.log(groupID);
     this.setState({author: screenName, group_id: groupID});
-    const res = await fetch('http://104.40.20.156/api/getConceptsByGroup?groupID=' + groupID, {method: 'GET'});  // to test locally, change to your machines IP address and append :3000
+    this.getConcepts(groupID);
+    // });
+  };
+
+  componentWillReceiveProps(nextProps) {
+    const screenName = nextProps.navigation.getParam('name', 'NO NAME');
+    const groupID = nextProps.navigation.getParam('groupID', '5cc211a9a158040015716bac');
+    this.setState({author: screenName, group_id: groupID});
+    this.getConcepts(groupID);
+  };
+
+  async getConcepts(groupid) {
+    console.log('groupid get concepts ' + groupid);
+    const res = await fetch('http://104.40.20.156/api/getConceptsByGroup?groupID=' + groupid, {method: 'GET'});
     const resJson = await res.json();
-    concepts = resJson.data
+    concepts = resJson.data;
     for (i = 0; i < resJson.data.length; i++) {
-        concepts[i].isCollapsed = true;
+      concepts[i].isCollapsed = true;
     }
     this.setState({concepts: concepts});
-
   }
 
   render() {

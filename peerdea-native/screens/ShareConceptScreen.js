@@ -21,10 +21,9 @@ export default class ShareConcept extends React.Component {
     author: '',
     images: [],
     imagesBase64: [],
-    story: 'This is my concepts story!',
+    story: '',
     group_id: ''
   };
-
 
   renderImage = (idx: number) => (
     <Image
@@ -34,13 +33,12 @@ export default class ShareConcept extends React.Component {
     />
   );
 
-
   askPermissionsAsync = async () => {
       await Permissions.askAsync(Permissions.CAMERA_ROLL);
       await Permissions.askAsync(Permissions.CAMERA);
       // probably need to do something to verify that permissions
       // were actually granted
-   };
+  };
 
   componentDidMount() {
     const {navigation} = this.props;
@@ -49,11 +47,18 @@ export default class ShareConcept extends React.Component {
     this.setState({author: screenName, group_id: groupID});
   }
 
+  componentWillReceiveProps(nextProps) {
+    const screenName = nextProps.navigation.getParam('name', 'NO NAME');
+    const groupID = nextProps.navigation.getParam('groupID', 'NO GROUP ID');
+    this.setState({author: screenName, group_id: groupID});
+  }
+
 
   render() {
     const {navigation} = this.props;
     const groupName = navigation.getParam('groupName', 'NO GROUP');
     const screenName = navigation.getParam('name', 'NO NAME');
+    const groupID = navigation.getParam('groupID', 'NO GROUP ID');
     let image = this.state.image;
     // uncomment for testing encoding and decoding
     // let author2 = this.state.author2;
@@ -93,13 +98,23 @@ export default class ShareConcept extends React.Component {
       <TextInput
         style={{height: 40, borderColor: 'gray', borderWidth: 1}}
         onChangeText={(text) => this.setState({story:text})}
-        value={this.state.story}
+        placeholder='This is my concepts story!'
       />
       <Button
         onPress={() => { this._sendConcept();}}
         title="Share concept with my group"
         color="#841584"
         accessibilityLabel="Share concept with my group"
+      />
+      <Button
+        onPress={() => { 
+          navigation.navigate('GiveFeedback', {
+            groupID: groupID,
+            name: screenName
+          });}}
+        title="Review other concepts"
+        color="#841584"
+        accessibilityLabel="Review other concepts"
       />
       </View>
       </ScrollView>
@@ -108,7 +123,6 @@ export default class ShareConcept extends React.Component {
   }
 
   _sendConcept = () => {
-
 
       // get requests to get users group keyword
       var temp = []
@@ -120,7 +134,7 @@ export default class ShareConcept extends React.Component {
           temp.push(elem);
       }
 
-
+      console.log(this.state.author);
       let data = {
         method: 'POST',
         credentials: 'same-origin',
@@ -137,13 +151,14 @@ export default class ShareConcept extends React.Component {
           // 'X-CSRFToken':  cookie.load('csrftoken')
           }
        }
-        Alert.alert('Thanks for sharing!');
+        
         return fetch('http://104.40.20.156/api/putConcept', data)
         .then(function(response){
           return response.json();
         })
         .then(function(json){
-         console.log('suuccess');
+          console.log('suuccess');
+          Alert.alert('Thanks for sharing!');
         })
         .catch(function(error) {
         console.log('There has been a problem with your fetch operation: ' + error.message);

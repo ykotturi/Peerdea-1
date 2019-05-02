@@ -13,40 +13,71 @@ import GiveFeedbackScreen from '../screens/GiveFeedbackScreen';
 
 // HomeStack follows a similar pattern as what is provided here: http://facebook.github.io/react-native/docs/navigation
 const HomeStack = createStackNavigator({
-  Home: {screen: HomeScreen},
-  CreateGroup: {screen: CreateGroupScreen},
-  JoinGroup: {screen: JoinGroupScreen},
-  ShareConcept: {screen: ShareConceptScreen},
-  GiveFeedback: {screen: GiveFeedbackScreen},
+  Home: {
+    screen: HomeScreen,
+    navigationOptions: {
+      title: 'Home'
+  }},
+  CreateGroup: {
+    screen: CreateGroupScreen,
+    navigationOptions: {
+      title: 'Create a Group'
+    }
+  },
+  JoinGroup: {
+    screen: JoinGroupScreen,
+    navigationOptions: {
+      title: 'Join a Group'
+    }
+  },
 });
 
-HomeStack.navigationOptions = {
-  tabBarLabel: 'Home',
+HomeStack.navigationOptions = ({navigation}) => {
+  let { routeName } = navigation.state.routes[navigation.state.index];
+  let navigationOptions = {
+    tabBarLabel: 'Home',
+    tabBarIcon: ({ focused }) => (
+      <TabBarIcon
+        focused={focused}
+        name={
+          Platform.OS === 'ios'
+            ? `ios-information-circle${focused ? '' : '-outline'}`
+            : 'md-information-circle'
+        }
+      />
+    ),
+    tabBarVisible: false
+  };
+  return navigationOptions;
+};
+
+const ShareConceptStack = createStackNavigator({
+  ShareConcept: {screen: ShareConceptScreen},
+})
+
+ShareConceptStack.navigationOptions = {
+  tabBarLabel: 'Share Concepts',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
-      focused={focused}
-      name={
-        Platform.OS === 'ios'
-          ? `ios-information-circle${focused ? '' : '-outline'}`
-          : 'md-information-circle'
-      }
-    />
+        focused={focused}
+        name={Platform.OS === 'ios' ? 'ios-images' : 'md-images'}
+      />
   ),
 };
 
-// const LinksStack = createStackNavigator({
-//   Links: LinksScreen,
-// });
+const GiveFeedbackStack = createStackNavigator({
+  GiveFeedback: GiveFeedbackScreen,
+})
 
-// LinksStack.navigationOptions = {
-//   tabBarLabel: 'Links',
-//   tabBarIcon: ({ focused }) => (
-//     <TabBarIcon
-//       focused={focused}
-//       name={Platform.OS === 'ios' ? 'ios-link' : 'md-link'}
-//     />
-//   ),
-// };
+GiveFeedbackStack.navigationOptions = {
+  tabBarLabel: 'Give Feedback',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+        focused={focused}
+        name={Platform.OS === 'ios' ? 'ios-heart' : 'md-heart'}
+      />
+  ),
+};
 
 const SettingsStack = createStackNavigator({
   Settings: SettingsScreen,
@@ -63,7 +94,17 @@ SettingsStack.navigationOptions = {
 };
 
 export default createBottomTabNavigator({
-  HomeStack,
-  // LinksStack,
-  SettingsStack,
+  First: {
+    screen: HomeStack
+  },
+  Second: {
+    screen: ShareConceptStack
+  },
+  Third: {
+    screen: GiveFeedbackStack
+  },
+  Fourth: {
+    screen: SettingsStack
+  }
 });
+

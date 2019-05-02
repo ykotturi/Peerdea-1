@@ -17,7 +17,7 @@ import { MonoText } from '../components/StyledText';
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
-    header: null,
+    header: null
   };
 
 
@@ -48,16 +48,6 @@ export default class HomeScreen extends React.Component {
             color="#841584"
             accessibilityLabel="Join an existing group"
           />
-
-          <Button
-            onPress={() => navigate('GiveFeedback')}
-            title="Give Feedback"
-            color="#841584"
-            accessibilityLabel="Give Feedback"
-          />
-
-
-          
       </View>
     );
   }
