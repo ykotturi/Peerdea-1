@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { WebBrowser } from 'expo';
 import { Button } from 'react-native-elements';
+import {AsyncStorage} from 'react-native';
 
 // first, should check to make sure valid group name (numbers and letters only, longer than 5 characters)
 // then, there should be some check as to whether the group name is already taken
@@ -64,15 +65,17 @@ export default class CreateGroupScreen extends React.Component {
           const createRes = await fetch('http://104.40.20.156/api/putGroup', data);
           const createResJson = await createRes.json();
           this.setState({groupID: checkResJson.data[0]._id});
+          await AsyncStorage.multiSet([
+            ["groupName", this.state.groupName],
+            ["name", this.state.memberName],
+            ["groupID", checkResJson.data[0]._id]
+          ]);
         }
         catch(err) {
           console.log(err);
         }
-        this.props.navigation.navigate('ShareConcept', {
-          groupName: this.state.groupName,
-          name: this.state.memberName,
-          groupID: this.state.groupID
-        });
+
+        this.props.navigation.navigate('ShareConcept');
       }
     }
     catch(err) {

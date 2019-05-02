@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { WebBrowser } from 'expo';
 import { Button } from 'react-native-elements';
+import {AsyncStorage} from 'react-native';
 
 export default class JoinGroupScreen extends React.Component {
   state = {
@@ -40,11 +41,13 @@ export default class JoinGroupScreen extends React.Component {
       } 
       //if the group exists, redirect the screen to the create concept screen
       else {
-        this.props.navigation.navigate('ShareConcept', {
-          groupName: this.state.groupName,
-          name: this.state.memberName,
-          groupID: checkResJson.data[0]._id
-        });
+        await AsyncStorage.multiSet([
+          ["groupName", this.state.groupName],
+          ["name", this.state.memberName],
+          ["groupID", checkResJson.data[0]._id]
+        ]);
+
+        this.props.navigation.navigate('ShareConcept');
       }
     }
     catch(err) {

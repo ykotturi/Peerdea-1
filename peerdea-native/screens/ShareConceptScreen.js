@@ -2,19 +2,18 @@ import React, { Component } from 'react';
 import { Button, Image, View, StyleSheet, Text, TouchableOpacity, TextInput, Alert, ScrollView } from 'react-native';
 // because we're using mangaged apps version of expo (and not bare version):
 import { ImagePicker, Permissions, Camera } from 'expo';
-
-
-
 import { Buffer } from 'buffer';
 import ImageCarousel from 'react-native-image-carousel';
+import {AsyncStorage} from 'react-native';
+
 
 // PICK UP HERE
 //TODO: change infrastructure of this file to make state hold multple values of what a concet is
 
 export default class ShareConcept extends React.Component {
-
   static navigationOptions = {
     title: 'Share a Concept',
+
   };
 
   state = {
@@ -33,7 +32,7 @@ export default class ShareConcept extends React.Component {
     />
   );
 
-  askPermissionsAsync = async () => {
+  askPermissionsAsync = async() => {
       await Permissions.askAsync(Permissions.CAMERA_ROLL);
       await Permissions.askAsync(Permissions.CAMERA);
       // probably need to do something to verify that permissions
@@ -41,24 +40,26 @@ export default class ShareConcept extends React.Component {
   };
 
   componentDidMount() {
-    const {navigation} = this.props;
-    const screenName = navigation.getParam('name', 'NO NAME');
-    const groupID = navigation.getParam('groupID', 'NO GROUP ID');
-    this.setState({author: screenName, group_id: groupID});
+    this.setData();
   }
 
   componentWillReceiveProps(nextProps) {
-    const screenName = nextProps.navigation.getParam('name', 'NO NAME');
-    const groupID = nextProps.navigation.getParam('groupID', 'NO GROUP ID');
-    this.setState({author: screenName, group_id: groupID});
+    this.setData();
+  }
+
+  async setData() {
+    let values
+    try {
+      values = await AsyncStorage.multiGet(['groupName', 'name', 'groupID']);
+      this.setState({groupName: values[0][1], author: values[1][1], group_id: values[2][1]})
+    } catch (err) {
+      console.log(err);
+    }
+    // console.log(values);
   }
 
 
   render() {
-    const {navigation} = this.props;
-    const groupName = navigation.getParam('groupName', 'NO GROUP');
-    const screenName = navigation.getParam('name', 'NO NAME');
-    const groupID = navigation.getParam('groupID', 'NO GROUP ID');
     let image = this.state.image;
     // uncomment for testing encoding and decoding
     // let author2 = this.state.author2;
@@ -72,7 +73,7 @@ export default class ShareConcept extends React.Component {
           style={{width: 300, height: 50}}
           source={require('../assets/images/peerdea-logo-draft.png')}
         />
-        <Text>Welcome to {groupName}, {screenName}</Text>
+        <Text>Welcome to {this.state.groupName}, {this.state.author}</Text>
       <Button
         title="Pick an image from camera roll"
         onPress={this._pickImage}
@@ -94,7 +95,12 @@ export default class ShareConcept extends React.Component {
                 ))}
          </ImageCarousel>
       </View>
-      <Text> {this.state.author2} </Text>
+      <Button
+        onPress={() => { this.setState({images: [], imagesBase64: []});}}
+        title="Clear Images"
+        color="#841584"
+        accessibilityLabel="Clear Images"
+      />
       <TextInput
         style={{height: 40, borderColor: 'gray', borderWidth: 1}}
         onChangeText={(text) => this.setState({story:text})}
@@ -106,16 +112,7 @@ export default class ShareConcept extends React.Component {
         color="#841584"
         accessibilityLabel="Share concept with my group"
       />
-      <Button
-        onPress={() => { 
-          navigation.navigate('GiveFeedback', {
-            groupID: groupID,
-            name: screenName
-          });}}
-        title="Review other concepts"
-        color="#841584"
-        accessibilityLabel="Review other concepts"
-      />
+      
       </View>
       </ScrollView>
 
@@ -125,6 +122,7 @@ export default class ShareConcept extends React.Component {
   _sendConcept = () => {
 
       // get requests to get users group keyword
+      const {navigation} = this.props;
       var temp = []
       for (i = 0; i < this.state.imagesBase64.length; i++){
           const buff = new Buffer(this.state.imagesBase64[i], 'base64');
@@ -158,7 +156,9 @@ export default class ShareConcept extends React.Component {
         })
         .then(function(json){
           console.log('suuccess');
-          Alert.alert('Thanks for sharing!');
+          Alert.alert(
+          'Thanks for sharing!'
+        );
         })
         .catch(function(error) {
         console.log('There has been a problem with your fetch operation: ' + error.message);

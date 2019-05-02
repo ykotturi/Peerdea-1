@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@expo/samples": "2.1.1",
+    "@react-native-community/async-storage": "^1.3.4",
     "buffer": "^5.2.1",
     "expo": "^32.0.0",
     "react": "16.5.0",
