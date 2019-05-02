@@ -21,7 +21,8 @@ import { Button } from 'react-native-elements';
 export default class CreateGroupScreen extends React.Component {
   state = {
     groupName: '',
-    memberName: ''
+    memberName: '',
+    groupID: ''
   };
 
   async onCreate() {
@@ -30,6 +31,7 @@ export default class CreateGroupScreen extends React.Component {
       const checkRes = await fetch('http://104.40.20.156/api/getGroupByName?name=' + this.state.groupName, {method: 'GET'});
       const checkResJson = await checkRes.json();
       console.log("print " + JSON.stringify(checkResJson.data));
+      console.log(checkResJson.data.length);
 
       //if the group exists, notify the user to create a new group name
       if (checkResJson.data.length > 0) {
@@ -45,6 +47,7 @@ export default class CreateGroupScreen extends React.Component {
       //if the group does not exist, create a new group with the name
       //and redirect the screen to the create concept screen
       else {
+        // var groupID;
         var data = {
           method: 'POST',
           credentials: 'same-origin',
@@ -60,7 +63,7 @@ export default class CreateGroupScreen extends React.Component {
         try {
           const createRes = await fetch('http://104.40.20.156/api/putGroup', data);
           const createResJson = await createRes.json();
-          
+          this.setState({groupID: checkResJson.data[0]._id});
         }
         catch(err) {
           console.log(err);
@@ -68,7 +71,7 @@ export default class CreateGroupScreen extends React.Component {
         this.props.navigation.navigate('ShareConcept', {
           groupName: this.state.groupName,
           name: this.state.memberName,
-          groupID: checkResJson.data[0]._id
+          groupID: this.state.groupID
         });
       }
     }
