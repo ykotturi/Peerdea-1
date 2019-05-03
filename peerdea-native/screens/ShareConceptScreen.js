@@ -40,11 +40,14 @@ export default class ShareConcept extends React.Component {
   };
 
   componentDidMount() {
-    this.setData();
-  }
+    this.didFocusListener = this.props.navigation.addListener(
+      'didFocus',
+      () => { this.setData() },
+    );
+  };
 
-  componentWillReceiveProps(nextProps) {
-    this.setData();
+  componentWillUnmount() {
+    this.didFocusListener.remove();
   }
 
   async setData() {
