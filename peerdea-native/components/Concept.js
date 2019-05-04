@@ -41,34 +41,37 @@ constructor(props) {
 
 
 
-  componentDidMount() {
-    //this.updateConcept();
-  };
+//  componentDidMount() {
+//    //this.updateConcept();
+//  };
 
   async updateConcept() {
     const res = await fetch('http://104.40.20.156/api/getConceptByID?id=' + this.state.concept._id, {method: 'GET'});
     const resJson = await res.json();
-    const conceptNew = resJson.data;
+    const conceptNew = resJson.data[0];
     conceptNew.isCollapsed = true;
     console.log("updatin");
-    console.log(conceptNew);
 
-    await this.setState({concept: conceptNew});
-    console.log(this.state.concept);
+   this.setState({concept: conceptNew});
+
   }
 
+
+
+
   render() {
+      const concept = this.state.concept;
       var yesAndViews = []
-      for (j = 0; j < this.state.concept.yesand.length; j++){
-          const yesandText = this.state.concept.yesand[j];
+      for (j = 0; j < concept.yesand.length; j++){
+          const yesandText = concept.yesand[j];
           yesAndViews.push(
                   <Text key = {j}> {yesandText} </Text>
           )
       }
       const yesAnds = yesAndViews;
       var images = [];
-      for (imageI = 0; imageI < this.state.concept.media.length; imageI++){
-          const buff = new Buffer(this.state.concept.media[imageI].data);
+      for (imageI = 0; imageI < concept.media.length; imageI++){
+          const buff = new Buffer(concept.media[imageI].data);
           const base64data = buff.toString('base64');
           const uriString = `data:image/gif;base64,${base64data}`;
           images.push(uriString);
@@ -95,19 +98,19 @@ constructor(props) {
             ))}
            </ImageCarousel>
          </View>
-          <Text> {this.state.concept.name} </Text>
-          <Text> {this.state.concept.description} </Text>
-          <TouchableOpacity style={styles.btn}  onPress = {async () => { await this._yes();}}>
-             <Text>Yes {this.state.concept.yes}</Text>
+          <Text> {concept.name} </Text>
+          <Text> {concept.description} </Text>
+          <TouchableOpacity style={styles.btn}  onPress = {async () => { this._yes();}}>
+             <Text>Yes {concept.yes}</Text>
              <Image source={require('../assets/images/heart.png')}  style={{width: 20, height: 20}}/>
           </TouchableOpacity>
           <TouchableOpacity style={styles.btn} onPress = {() => { this._yesAnd();}}>
               <Text>Yes And</Text>
               <Image source={require('../assets/images/heart.png')}  style={{ width: 20, height: 20}}/>
           </TouchableOpacity>
-          {this.state.concept.isCollapsed &&
+          {concept.isCollapsed &&
               <Button title="Expand" onPress={() => this._changeCollapse(false)}/>}
-          <Collapsible collapsed={this.state.concept.isCollapsed}>
+          <Collapsible collapsed={concept.isCollapsed}>
               <Button title="Collapse" onPress={() => this._changeCollapse(true)}/>
               {yesAnds}
           </Collapsible>
