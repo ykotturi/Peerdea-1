@@ -7,6 +7,7 @@ import { ImagePicker, Permissions, Camera } from 'expo';
 
 import { Buffer } from 'buffer';
 import ImageCarousel from 'react-native-image-carousel';
+import Swiper from "react-native-swiper";
 
 // PICK UP HERE
 //TODO: change infrastructure of this file to make state hold multple values of what a concet is
@@ -81,19 +82,20 @@ export default class ShareConcept extends React.Component {
         title="Take a picture"
         onPress={this._takePicture}
       />
-      <View style={{flex: 1}}>
-          <ImageCarousel
-                renderContent={this.renderImage}>
-                {this.state.images.map(url => (
-                  <Image
-                    style={{ width: 200, height: 200 }}
-                    key={url}
-                    source={{uri: url}}
-                    resizeMode="contain"
-                  />
-                ))}
-         </ImageCarousel>
-      </View>
+
+
+      {this.state.images.length > 0 && <Swiper height={200} width={200}>
+        {this.state.images.map(url => (
+          <View key={url} style={styles.slideContainer}>
+          <Image
+            style={{ width: 200, height: 200 }}
+            source={{uri: url}}
+            resizeMode="contain"
+          />
+          </View>
+        ))}
+       </Swiper> }
+
       <Text> {this.state.author2} </Text>
       <TextInput
         style={{height: 40, borderColor: 'gray', borderWidth: 1}}
@@ -107,7 +109,7 @@ export default class ShareConcept extends React.Component {
         accessibilityLabel="Share concept with my group"
       />
       <Button
-        onPress={() => { 
+        onPress={() => {
           navigation.navigate('GiveFeedback', {
             groupID: groupID,
             name: screenName

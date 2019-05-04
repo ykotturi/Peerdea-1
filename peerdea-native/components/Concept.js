@@ -17,6 +17,7 @@ import { ImagePicker,
 import { Buffer } from 'buffer';
 import Collapsible from 'react-native-collapsible';
 import ImageCarousel from 'react-native-image-carousel';
+import Swiper from "react-native-swiper";
 
 // PICK UP HERE
 //TODO: change infrastructure of this file to make state hold multple values of what a concet is
@@ -32,11 +33,7 @@ constructor(props) {
       iLike: '',
       iWish: '',
     };
-    this.updateConcept=this.updateConcept.bind(this);
-    this._yes = this._yes.bind(this);
-    this._yesAnd = this._yesAnd.bind(this);
-    this._changeCollapse=this._changeCollapse.bind(this);
-    this._sendFeedback = this._sendFeedback.bind(this);
+
 }
 
 
@@ -79,25 +76,19 @@ constructor(props) {
       const finalImages = images;
     return (
       <View key = {i} style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-				<View style={{flex: 1}}>
-          <ImageCarousel
-            renderContent={(idx: number) => (
-                <Image
-                  style={StyleSheet.absoluteFill}
-                  resizeMode="contain"
-                  source={{uri: finalImages[idx]}}
-                />
-              )}>
+
+          {finalImages.length > 0 && <Swiper height={200} width={200} >
             {finalImages.map(url => (
+              <View key={url} style={styles.slideContainer}>
               <Image
                 style={{ width: 200, height: 200 }}
-                key={url}
                 source={{uri: url}}
                 resizeMode="contain"
               />
+              </View>
             ))}
-           </ImageCarousel>
-         </View>
+           </Swiper>}
+
           <Text> {concept.name} </Text>
           <Text> {concept.description} </Text>
           <TouchableOpacity style={styles.btn}  onPress = {async () => { this._yes();}}>
@@ -295,5 +286,10 @@ const styles = StyleSheet.create({
         flex: 2,
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    slideContainer: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center"
     },
 });
