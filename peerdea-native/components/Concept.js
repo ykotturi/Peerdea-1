@@ -9,11 +9,13 @@ import { Button,
           TextInput,
           Alert,
           ScrollView,
-          Modal } from 'react-native';
+          Modal,
+          Platform } from 'react-native';
 // because we're using mangaged apps version of expo (and not bare version):
 import { ImagePicker,
          Permissions,
          Camera } from 'expo';
+import GiveFeedbackIcon from '../components/GiveFeedbackIcon';
 import { Buffer } from 'buffer';
 import Collapsible from 'react-native-collapsible';
 import ImageCarousel from 'react-native-image-carousel';
@@ -91,14 +93,22 @@ constructor(props) {
 
           <Text> {concept.name} </Text>
           <Text> {concept.description} </Text>
+          <View style={{flexDirection: 'row'}}>
           <TouchableOpacity style={styles.btn}  onPress = {async () => { this._yes();}}>
-             <Text>Yes {concept.yes}</Text>
-             <Image source={require('../assets/images/heart.png')}  style={{width: 20, height: 20}}/>
+             <GiveFeedbackIcon
+                  name={Platform.OS === 'ios' ? 'ios-heart' : 'md-heart'}
+                />
+             <Text>{concept.yes}</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.btn} onPress = {() => { this._yesAnd();}}>
-              <Text>Yes And</Text>
-              <Image source={require('../assets/images/heart.png')}  style={{ width: 20, height: 20}}/>
-          </TouchableOpacity>
+          </View>
+          <View style={{flexDirection: 'row'}}>
+            <TouchableOpacity style={styles.btn} onPress = {() => { this._yesAnd();}}>
+                <GiveFeedbackIcon
+                  name={Platform.OS === 'ios' ? 'ios-heart' : 'md-heart'}
+                />
+                <Text>and...</Text>
+            </TouchableOpacity>
+          </View>
           {concept.isCollapsed &&
               <Button title="Expand" onPress={() => this._changeCollapse(false)}/>}
           <Collapsible collapsed={concept.isCollapsed}>
