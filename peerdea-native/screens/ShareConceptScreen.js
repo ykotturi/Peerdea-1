@@ -60,11 +60,7 @@ export default class ShareConcept extends React.Component {
     const groupName = navigation.getParam('groupName', 'NO GROUP');
     const screenName = navigation.getParam('name', 'NO NAME');
     const groupID = navigation.getParam('groupID', 'NO GROUP ID');
-    let image = this.state.image;
-    // uncomment for testing encoding and decoding
-    // let author2 = this.state.author2;
-    // let image1 = this.state.image1;
-    // let image2 = this.state.image2;
+
 
     return (
       <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
@@ -83,8 +79,18 @@ export default class ShareConcept extends React.Component {
         onPress={this._takePicture}
       />
 
+      {this.state.images.length == 1 &&
 
-      {this.state.images.length > 0 && <Swiper height={200} width={200}>
+          <View key={this.state.images[0]} style={styles.slideContainer}>
+          <Image
+            style={{ width: 200, height: 200 }}
+            source={{uri: this.state.images[0]}}
+            resizeMode="contain"
+          />
+          </View>
+        }
+      {this.state.images.length > 1 &&
+      <Swiper height={200} width={200} >
         {this.state.images.map(url => (
           <View key={url} style={styles.slideContainer}>
           <Image
@@ -226,4 +232,9 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingTop: 30,
   },
+   slideContainer: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center"
+    },
 });
