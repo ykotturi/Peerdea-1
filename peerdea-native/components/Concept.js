@@ -93,26 +93,25 @@ constructor(props) {
 
           <Text> {concept.name} </Text>
           <Text> {concept.description} </Text>
-          <View style={{flexDirection: 'row'}}>
-          <TouchableOpacity style={styles.btn}  onPress = {async () => { this._yes();}}>
-             <GiveFeedbackIcon
-                  name={Platform.OS === 'ios' ? 'ios-heart' : 'md-heart'}
-                />
-             <Text>{concept.yes}</Text>
-          </TouchableOpacity>
+          <View style={{flex: 1, flexDirection: 'row', justifyContent: 'flex-start'}}>
+            <TouchableOpacity style={styles.btn}  onPress = {async () => { this._yes();}}>
+               <GiveFeedbackIcon
+                    name={Platform.OS === 'ios' ? 'ios-heart' : 'md-heart'}
+                  />
+               <Text>{concept.yes}</Text>
+            </TouchableOpacity>
           </View>
-          <View style={{flexDirection: 'row'}}>
+          <View style={{flex: 1, flexDirection: 'row'}}>
             <TouchableOpacity style={styles.btn} onPress = {() => { this._yesAnd();}}>
                 <GiveFeedbackIcon
                   name={Platform.OS === 'ios' ? 'ios-heart' : 'md-heart'}
-                />
-                <Text>and...</Text>
+                /><Text>and...</Text>
             </TouchableOpacity>
           </View>
           {concept.isCollapsed &&
-              <Button title="Expand" onPress={() => this._changeCollapse(false)}/>}
+              <Button title="View feedback" onPress={() => this._changeCollapse(false)}/>}
           <Collapsible collapsed={concept.isCollapsed}>
-              <Button title="Collapse" onPress={() => this._changeCollapse(true)}/>
+              <Button title="Close feedback" onPress={() => this._changeCollapse(true)}/>
               {yesAnds}
           </Collapsible>
           <Text>  {"\n\n"} </Text>
