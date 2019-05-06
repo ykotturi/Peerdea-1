@@ -63,12 +63,14 @@ export default class CreateGroupScreen extends React.Component {
         }
         try {
           const createRes = await fetch('http://104.40.20.156/api/putGroup', data);
-          const createResJson = await createRes.json();
-          this.setState({groupID: checkResJson.data[0]._id});
+          const getIDRes = await fetch('http://104.40.20.156/api/getGroupByName?name=' + this.state.groupName, {method: 'GET'});
+          const getIDResJson = await getIDRes.json();
+          console.log("print " + JSON.stringify(getIDResJson));
+          this.setState({groupID: getIDResJson.data[0]._id});
           await AsyncStorage.multiSet([
             ["groupName", this.state.groupName],
             ["name", this.state.memberName],
-            ["groupID", checkResJson.data[0]._id]
+            ["groupID", this.state.groupID]
           ]);
         }
         catch(err) {

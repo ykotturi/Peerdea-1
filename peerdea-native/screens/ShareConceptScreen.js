@@ -104,11 +104,14 @@ export default class ShareConcept extends React.Component {
         color="#841584"
         accessibilityLabel="Clear Images"
       />
-      <TextInput
-        style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-        onChangeText={(text) => this.setState({story:text})}
-        placeholder='This is my concepts story!'
-      />
+      <View style={{flexDirection: 'row'}}> 
+          <TextInput
+            multiline= {true}
+            style={{height: 100, maxHeight: 100, flex: 0.75, borderColor: 'gray', borderWidth: 1}}
+            onChangeText={(text) => this.setState({story: text})}
+            placeholder="This is my concepts story!"
+          />
+        </View>
       <Button
         onPress={() => { this._sendConcept();}}
         title="Share concept with my group"
