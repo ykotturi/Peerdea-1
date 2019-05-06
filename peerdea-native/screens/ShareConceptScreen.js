@@ -5,7 +5,7 @@ import { ImagePicker, Permissions, Camera } from 'expo';
 import { Buffer } from 'buffer';
 import ImageCarousel from 'react-native-image-carousel';
 import {AsyncStorage} from 'react-native';
-
+import Swiper from "react-native-swiper";
 
 // PICK UP HERE
 //TODO: change infrastructure of this file to make state hold multple values of what a concet is
@@ -63,11 +63,6 @@ export default class ShareConcept extends React.Component {
 
 
   render() {
-    let image = this.state.image;
-    // uncomment for testing encoding and decoding
-    // let author2 = this.state.author2;
-    // let image1 = this.state.image1;
-    // let image2 = this.state.image2;
 
     return (
       <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
@@ -85,25 +80,30 @@ export default class ShareConcept extends React.Component {
         title="Take a picture"
         onPress={this._takePicture}
       />
-      <View style={{flex: 1}}>
-          <ImageCarousel
-                renderContent={this.renderImage}>
-                {this.state.images.map(url => (
-                  <Image
-                    style={{ width: 200, height: 200 }}
-                    key={url}
-                    source={{uri: url}}
-                    resizeMode="contain"
-                  />
-                ))}
-         </ImageCarousel>
-      </View>
-      <Button
-        onPress={() => { this.setState({images: [], imagesBase64: []});}}
-        title="Clear Images"
-        color="#841584"
-        accessibilityLabel="Clear Images"
-      />
+
+      {this.state.images.length == 1 &&
+
+          <View key={this.state.images[0]} style={styles.slideContainer}>
+          <Image
+            style={{ width: 200, height: 200 }}
+            source={{uri: this.state.images[0]}}
+            resizeMode="contain"
+          />
+          </View>
+        }
+      {this.state.images.length > 1 &&
+      <Swiper height={200} width={200} >
+        {this.state.images.map(url => (
+          <View key={url} style={styles.slideContainer}>
+          <Image
+            style={{ width: 200, height: 200 }}
+            source={{uri: url}}
+            resizeMode="contain"
+          />
+          </View>
+        ))}
+       </Swiper> }
+      
       <View style={{flexDirection: 'row'}}> 
           <TextInput
             multiline= {true}
@@ -118,7 +118,7 @@ export default class ShareConcept extends React.Component {
         color="#841584"
         accessibilityLabel="Share concept with my group"
       />
-      
+
       </View>
       </ScrollView>
 
@@ -230,4 +230,9 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingTop: 30,
   },
+   slideContainer: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center"
+    },
 });
