@@ -4,7 +4,7 @@ import { Button, Image, View, StyleSheet, Text, TouchableOpacity, TextInput, Ale
 import { ImagePicker, Permissions, Camera } from 'expo';
 import { Buffer } from 'buffer';
 import ImageCarousel from 'react-native-image-carousel';
-import {AsyncStorage} from 'react-native';
+import {AsyncStorage, findNodeHandle} from 'react-native';
 import Swiper from "react-native-swiper";
 
 // PICK UP HERE
@@ -65,63 +65,72 @@ export default class ShareConcept extends React.Component {
   render() {
 
     return (
-      <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+      <ScrollView ref="myScrollView" style={styles.container} contentContainerStyle={styles.contentContainer}>
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <Image
           style={{width: 300, height: 50}}
           source={require('../assets/images/peerdea-logo-draft.png')}
         />
         <Text>Welcome to {this.state.groupName}, {this.state.author}</Text>
-      <Button
-        title="Pick an image from camera roll"
-        onPress={this._pickImage}
-      />
-      <Button
-        title="Take a picture"
-        onPress={this._takePicture}
-      />
+        <Button
+          title="Pick an image from camera roll"
+          onPress={this._pickImage}
+        />
+        <Button
+          title="Take a picture"
+          onPress={this._takePicture}
+        />
+        <TextInput
+          multiline= {true}
+          style={{height: 60, maxHeight: 60, width: 300, borderColor: 'gray', borderWidth: 1}}
+          onChangeText={(text) => this.setState({story: text})}
+          placeholder="This is my concepts story!"
+          ref="myInput"
+          onFocus={this._scrollToInput.bind(this)}
+        />
+        {this.state.images.length == 1 &&
 
-      {this.state.images.length == 1 &&
-
-          <View key={this.state.images[0]} style={styles.slideContainer}>
-          <Image
-            style={{ width: 200, height: 200 }}
-            source={{uri: this.state.images[0]}}
-            resizeMode="contain"
-          />
-          </View>
-        }
-      {this.state.images.length > 1 &&
-      <Swiper height={200} width={200} >
-        {this.state.images.map(url => (
-          <View key={url} style={styles.slideContainer}>
-          <Image
-            style={{ width: 200, height: 200 }}
-            source={{uri: url}}
-            resizeMode="contain"
-          />
-          </View>
-        ))}
-       </Swiper> }
-      
-      <View style={{flexDirection: 'row'}}> 
-          <TextInput
-            multiline= {true}
-            style={{height: 100, maxHeight: 100, flex: 0.75, borderColor: 'gray', borderWidth: 1}}
-            onChangeText={(text) => this.setState({story: text})}
-            placeholder="This is my concepts story!"
-          />
-        </View>
-      <Button
-        onPress={() => { this._sendConcept();}}
-        title="Share concept with my group"
-        color="#841584"
-        accessibilityLabel="Share concept with my group"
-      />
-
+            <View key={this.state.images[0]} style={styles.slideContainer}>
+            <Image
+              style={{ width: 300, height: 300 }}
+              source={{uri: this.state.images[0]}}
+              resizeMode="contain"
+            />
+            </View>
+          }
+        {this.state.images.length > 1 &&
+        <Swiper height={300} width={300} >
+          {this.state.images.map(url => (
+            <View key={url} style={styles.slideContainer}>
+            <Image
+              style={{ width: 300, height: 300 }}
+              source={{uri: url}}
+              resizeMode="contain"
+            />
+            </View>
+          ))}
+         </Swiper> }
+        <Button
+          onPress={() => { this._sendConcept();}}
+          title="Share concept with my group"
+          color="#841584"
+          accessibilityLabel="Share concept with my group"
+        />
       </View>
+      
       </ScrollView>
 
+    );
+  }
+
+  _scrollToInput() {
+    const scrollResponder = this.refs.myScrollView.getScrollResponder();
+    const inputHandle = findNodeHandle(this.refs.myInput)
+
+    scrollResponder.scrollResponderScrollNativeHandleToKeyboard(
+      inputHandle, // The TextInput node handle
+      0, // The scroll view's bottom "contentInset" (default 0)
+      true // Prevent negative scrolling
     );
   }
 
