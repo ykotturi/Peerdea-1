@@ -3,6 +3,13 @@ import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 import { AppLoading, Asset, Font, Icon } from 'expo';
 import AppNavigator from './navigation/AppNavigator';
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+});
+
 export default class App extends React.Component {
   state = {
     isLoadingComplete: false,
@@ -24,8 +31,8 @@ export default class App extends React.Component {
           <AppNavigator />
         </View>
       );
-    }
-  }
+    };
+  };
 
   _loadResourcesAsync = async () => {
     return Promise.all([
@@ -52,11 +59,6 @@ export default class App extends React.Component {
   _handleFinishLoading = () => {
     this.setState({ isLoadingComplete: true });
   };
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-});
+
