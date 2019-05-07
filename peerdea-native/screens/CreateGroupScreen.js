@@ -13,6 +13,8 @@ import {
 import { WebBrowser } from 'expo';
 import { Button } from 'react-native-elements';
 import {AsyncStorage} from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+
 
 // first, should check to make sure valid group name (numbers and letters only, longer than 5 characters)
 // then, there should be some check as to whether the group name is already taken
@@ -89,7 +91,10 @@ export default class CreateGroupScreen extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <KeyboardAwareScrollView
+        resetScrollToCoords={{ x: 0, y: 0 }}
+        contentContainerStyle={styles.container}
+      >
         <Image
             style={{width: 300, height: 50}}
             source={require('../assets/images/peerdea-logo-draft.png')}
@@ -115,7 +120,7 @@ export default class CreateGroupScreen extends React.Component {
           color="#841584"
           accessibilityLabel="Create"
         />
-       </View>
+       </KeyboardAwareScrollView>
     );
   }
 }

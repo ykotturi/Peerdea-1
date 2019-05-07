@@ -4,7 +4,8 @@ import { Button, Image, View, StyleSheet, Text, TouchableOpacity, TextInput, Ale
 import { ImagePicker, Permissions, Camera } from 'expo';
 import { Buffer } from 'buffer';
 import ImageCarousel from 'react-native-image-carousel';
-import {AsyncStorage, findNodeHandle} from 'react-native';
+import {AsyncStorage} from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Swiper from "react-native-swiper";
 
 // PICK UP HERE
@@ -65,8 +66,17 @@ export default class ShareConcept extends React.Component {
   render() {
 
     return (
-      <ScrollView ref="myScrollView" style={styles.container} contentContainerStyle={styles.contentContainer}>
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <KeyboardAwareScrollView
+        resetScrollToCoords={{ x: 0, y: 0 }}
+        contentContainerStyle={styles.container}
+      >
+      <View style={{ 
+        flex: 1, 
+        flexDirection: 'column', 
+        justifyContent: 'flex-start',
+        alignItems: 'center', 
+        padding: 10 
+      }}>
         <Image
           style={{width: 300, height: 50}}
           source={require('../assets/images/peerdea-logo-draft.png')}
@@ -80,14 +90,7 @@ export default class ShareConcept extends React.Component {
           title="Take a picture"
           onPress={this._takePicture}
         />
-        <TextInput
-          multiline= {true}
-          style={{height: 60, maxHeight: 60, width: 300, borderColor: 'gray', borderWidth: 1}}
-          onChangeText={(text) => this.setState({story: text})}
-          placeholder="This is my concepts story!"
-          ref="myInput"
-          onFocus={this._scrollToInput.bind(this)}
-        />
+        
         {this.state.images.length == 1 &&
 
             <View key={this.state.images[0]} style={styles.slideContainer}>
@@ -109,7 +112,16 @@ export default class ShareConcept extends React.Component {
             />
             </View>
           ))}
-         </Swiper> }
+        </Swiper> }
+
+        <TextInput
+          multiline= {true}
+          style={{height: 60, maxHeight: 60, width: 300, borderColor: 'gray', borderWidth: 1}}
+          onChangeText={(text) => this.setState({story: text})}
+          placeholder="This is my concepts story!"
+          
+        />
+        
         <Button
           onPress={() => { this._sendConcept();}}
           title="Share concept with my group"
@@ -118,21 +130,21 @@ export default class ShareConcept extends React.Component {
         />
       </View>
       
-      </ScrollView>
+      </KeyboardAwareScrollView>
 
     );
   }
 
-  _scrollToInput() {
-    const scrollResponder = this.refs.myScrollView.getScrollResponder();
-    const inputHandle = findNodeHandle(this.refs.myInput)
+  // _scrollToInput() {
+  //   const scrollResponder = this.refs.myScrollView.getScrollResponder();
+  //   const inputHandle = findNodeHandle(this.refs.myInput)
 
-    scrollResponder.scrollResponderScrollNativeHandleToKeyboard(
-      inputHandle, // The TextInput node handle
-      0, // The scroll view's bottom "contentInset" (default 0)
-      true // Prevent negative scrolling
-    );
-  }
+  //   scrollResponder.scrollResponderScrollNativeHandleToKeyboard(
+  //     inputHandle, // The TextInput node handle
+  //     0, // The scroll view's bottom "contentInset" (default 0)
+  //     true // Prevent negative scrolling
+  //   );
+  // }
 
   _sendConcept = () => {
 
