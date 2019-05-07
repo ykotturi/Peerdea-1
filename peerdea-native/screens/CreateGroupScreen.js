@@ -12,6 +12,9 @@ import {
 } from 'react-native';
 import { WebBrowser } from 'expo';
 import { Button } from 'react-native-elements';
+import {AsyncStorage} from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+
 
 // first, should check to make sure valid group name (numbers and letters only, longer than 5 characters)
 // then, there should be some check as to whether the group name is already taken
@@ -21,7 +24,8 @@ import { Button } from 'react-native-elements';
 export default class CreateGroupScreen extends React.Component {
   state = {
     groupName: '',
-    memberName: ''
+    memberName: '',
+    groupID: ''
   };
 
   async onCreate() {
@@ -30,6 +34,7 @@ export default class CreateGroupScreen extends React.Component {
       const checkRes = await fetch('http://104.40.20.156/api/getGroupByName?name=' + this.state.groupName, {method: 'GET'});
       const checkResJson = await checkRes.json();
       console.log("print " + JSON.stringify(checkResJson.data));
+      console.log(checkResJson.data.length);
 
       //if the group exists, notify the user to create a new group name
       if (checkResJson.data.length > 0) {
@@ -45,6 +50,7 @@ export default class CreateGroupScreen extends React.Component {
       //if the group does not exist, create a new group with the name
       //and redirect the screen to the create concept screen
       else {
+        // var groupID;
         var data = {
           method: 'POST',
           credentials: 'same-origin',
@@ -59,17 +65,21 @@ export default class CreateGroupScreen extends React.Component {
         }
         try {
           const createRes = await fetch('http://104.40.20.156/api/putGroup', data);
-          const createResJson = await createRes.json();
-          
+          const getIDRes = await fetch('http://104.40.20.156/api/getGroupByName?name=' + this.state.groupName, {method: 'GET'});
+          const getIDResJson = await getIDRes.json();
+          console.log("print " + JSON.stringify(getIDResJson));
+          this.setState({groupID: getIDResJson.data[0]._id});
+          await AsyncStorage.multiSet([
+            ["groupName", this.state.groupName],
+            ["name", this.state.memberName],
+            ["groupID", this.state.groupID]
+          ]);
         }
         catch(err) {
           console.log(err);
         }
-        this.props.navigation.navigate('ShareConcept', {
-          groupName: this.state.groupName,
-          name: this.state.memberName,
-          groupID: checkResJson.data[0]._id
-        });
+
+        this.props.navigation.navigate('ShareConcept');
       }
     }
     catch(err) {
@@ -81,7 +91,10 @@ export default class CreateGroupScreen extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <KeyboardAwareScrollView
+        resetScrollToCoords={{ x: 0, y: 0 }}
+        contentContainerStyle={styles.container}
+      >
         <Image
             style={{width: 300, height: 50}}
             source={require('../assets/images/peerdea-logo-draft.png')}
@@ -107,7 +120,7 @@ export default class CreateGroupScreen extends React.Component {
           color="#841584"
           accessibilityLabel="Create"
         />
-       </View>
+       </KeyboardAwareScrollView>
     );
   }
 }

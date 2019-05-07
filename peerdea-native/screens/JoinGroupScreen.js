@@ -12,6 +12,9 @@ import {
 } from 'react-native';
 import { WebBrowser } from 'expo';
 import { Button } from 'react-native-elements';
+import {AsyncStorage} from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+
 
 export default class JoinGroupScreen extends React.Component {
   state = {
@@ -40,11 +43,13 @@ export default class JoinGroupScreen extends React.Component {
       } 
       //if the group exists, redirect the screen to the create concept screen
       else {
-        this.props.navigation.navigate('ShareConcept', {
-          groupName: this.state.groupName,
-          name: this.state.memberName,
-          groupID: checkResJson.data[0]._id
-        });
+        await AsyncStorage.multiSet([
+          ["groupName", this.state.groupName],
+          ["name", this.state.memberName],
+          ["groupID", checkResJson.data[0]._id]
+        ]);
+
+        this.props.navigation.navigate('ShareConcept');
       }
     }
     catch(err) {
@@ -54,11 +59,14 @@ export default class JoinGroupScreen extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <KeyboardAwareScrollView
+        resetScrollToCoords={{ x: 0, y: 0 }}
+        contentContainerStyle={styles.container}
+        >   
         <Image
-            style={{width: 300, height: 50}}
-            source={require('../assets/images/peerdea-logo-draft.png')}
-          />
+          style={{width: 300, height: 50}}
+          source={require('../assets/images/peerdea-logo-draft.png')}
+        />
         <Text style={styles.getStartedText}>Join a group below:</Text>
         <View style={{flexDirection: 'row'}}> 
           <TextInput
@@ -80,7 +88,7 @@ export default class JoinGroupScreen extends React.Component {
           color="#841584"
           accessibilityLabel="Join"
         />
-       </View>
+      </KeyboardAwareScrollView>
     );
   }
 }
