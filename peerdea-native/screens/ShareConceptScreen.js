@@ -90,6 +90,13 @@ export default class ShareConcept extends React.Component {
           title="Take a picture"
           onPress={this._takePicture}
         />
+
+        <Button
+          onPress={() => { this.setState({images: [], imagesBase64: []});}}
+          title="Clear Images"
+          color="#841584"
+          accessibilityLabel="Clear Images"
+        />
         
         {this.state.images.length == 1 &&
 
