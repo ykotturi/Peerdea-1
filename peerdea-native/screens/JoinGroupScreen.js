@@ -15,86 +15,6 @@ import { Button } from 'react-native-elements';
 import {AsyncStorage} from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
-
-export default class JoinGroupScreen extends React.Component {
-  state = {
-    groupName: '',
-    memberName: ''
-  };
-
-  async onJoin() {
-    console.log("join pressed "+ this.state.groupName);
-    try {
-      //check if the group exists first
-      const checkRes = await fetch('http://104.40.20.156/api/getGroupByName?name=' + this.state.groupName, {method: 'GET'});
-      const checkResJson = await checkRes.json();
-      console.log("print " + JSON.stringify(checkResJson.data));
-
-      //if the group does not exist, notify the user to create a new group name
-      if (checkResJson.data.length == 0) {
-        Alert.alert(
-          'Group ' + this.state.groupName + ' does not exist',
-          'Please try again with a different group name',
-          [
-            {text: 'OK', onPress: () => console.log('OK Pressed')},
-          ],
-          {cancelable: false},
-        );
-      } 
-      //if the group exists, redirect the screen to the create concept screen
-      else {
-        await AsyncStorage.multiSet([
-          ["groupName", this.state.groupName],
-          ["name", this.state.memberName],
-          ["groupID", checkResJson.data[0]._id]
-        ]);
-
-        this.props.navigation.navigate('ShareConcept');
-      }
-    }
-    catch(err) {
-      console.log(err);
-    }
-  }
-
-  render() {
-    return (
-      <KeyboardAwareScrollView
-        resetScrollToCoords={{ x: 0, y: 0 }}
-        contentContainerStyle={styles.container}
-        >   
-        <Image
-          style={{width: 300, height: 50}}
-          source={require('../assets/images/peerdea-logo-draft.png')}
-        />
-        <Text style={styles.getStartedText}>Join a group below:</Text>
-        <View style={{flexDirection: 'row'}}> 
-          <TextInput
-            style={{height: 40, flex: 0.5, borderColor: 'gray', borderWidth: 1}}
-            onChangeText={(text) => this.setState({groupName: text})}
-            placeholder="Enter your group name here"
-          />
-        </View>
-        <View style={{flexDirection: 'row'}}> 
-          <TextInput
-            style={{height: 40, flex: 0.5, borderColor: 'gray', borderWidth: 1}}
-            onChangeText={(text) => this.setState({memberName: text})}
-            placeholder="Enter your screen name here"
-          />
-        </View>
-        <Button raised 
-          onPress={() => this.onJoin()}
-          title="Join"
-          color="#841584"
-          accessibilityLabel="Join"
-        />
-      </KeyboardAwareScrollView>
-    );
-  }
-}
-
-
-
 const styles = StyleSheet.create({
   container: {
     paddingTop: 30,
@@ -187,3 +107,84 @@ const styles = StyleSheet.create({
     color: '#2e78b7',
   },
 });
+
+export default class JoinGroupScreen extends React.Component {
+  state = {
+    groupName: '',
+    memberName: ''
+  };
+
+  async onJoin() {
+    console.log("join pressed "+ this.state.groupName);
+    try {
+      //check if the group exists first
+      const checkRes = await fetch('http://104.40.20.156/api/getGroupByName?name=' + this.state.groupName, {method: 'GET'});
+      const checkResJson = await checkRes.json();
+      console.log("print " + JSON.stringify(checkResJson.data));
+
+      //if the group does not exist, notify the user to create a new group name
+      if (checkResJson.data.length == 0) {
+        Alert.alert(
+          'Group ' + this.state.groupName + ' does not exist',
+          'Please try again with a different group name',
+          [
+            {text: 'OK', onPress: () => console.log('OK Pressed')},
+          ],
+          {cancelable: false},
+        );
+      } 
+      //if the group exists, redirect the screen to the create concept screen
+      else {
+        await AsyncStorage.multiSet([
+          ["groupName", this.state.groupName],
+          ["name", this.state.memberName],
+          ["groupID", checkResJson.data[0]._id]
+        ]);
+
+        this.props.navigation.navigate('ShareConcept');
+      }
+    }
+    catch(err) {
+      console.log(err);
+    }
+  };
+
+
+
+  render() {
+    return (
+      <KeyboardAwareScrollView
+        resetScrollToCoords={{ x: 0, y: 0 }}
+        contentContainerStyle={styles.container}
+        >   
+        <Image
+          style={{width: 300, height: 50}}
+          source={require('../assets/images/peerdea-logo-draft.png')}
+        />
+        <Text style={styles.getStartedText}>Join a group below:</Text>
+        <View style={{flexDirection: 'row'}}> 
+          <TextInput
+            accessibilityLabel="groupName"
+            style={{height: 40, flex: 0.5, borderColor: 'gray', borderWidth: 1}}
+            onChangeText={(text) => this.setState({groupName: text})}
+            placeholder="Enter your group name here"
+          />
+        </View>
+        <View style={{flexDirection: 'row'}}> 
+          <TextInput
+            accessibilityLabel="memberName"
+            style={{height: 40, flex: 0.5, borderColor: 'gray', borderWidth: 1}}
+            onChangeText={(text) => this.setState({memberName: text})}
+            placeholder="Enter your screen name here"
+          />
+        </View>
+        <Button raised 
+          onPress={() => this.onJoin()}
+          title="Join"
+          color="#841584"
+          accessibilityLabel="Join"
+        />
+      </KeyboardAwareScrollView>
+    );
+  }
+}
