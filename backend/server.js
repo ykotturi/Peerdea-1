@@ -48,7 +48,6 @@ router.get("/getGroup", (req, res) => {
 });
 
 router.get("/getGroupByName", (req, res) => {
-  console.log("GETTING TO GET GROUP BY NAME");
   var name = req.query.name;
   Group.find({"name" : name}, (err, data) => {
     if (err) return res.json({ success: false, error: err });
