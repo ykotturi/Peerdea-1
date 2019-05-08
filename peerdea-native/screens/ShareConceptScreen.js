@@ -2,20 +2,19 @@ import React, { Component } from 'react';
 import { Button, Image, View, StyleSheet, Text, TouchableOpacity, TextInput, Alert, ScrollView } from 'react-native';
 // because we're using mangaged apps version of expo (and not bare version):
 import { ImagePicker, Permissions, Camera } from 'expo';
-
-
-
 import { Buffer } from 'buffer';
 import ImageCarousel from 'react-native-image-carousel';
+import {AsyncStorage} from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Swiper from "react-native-swiper";
 
 // PICK UP HERE
 //TODO: change infrastructure of this file to make state hold multple values of what a concet is
 
 export default class ShareConcept extends React.Component {
-
   static navigationOptions = {
     title: 'Share a Concept',
+
   };
 
   state = {
@@ -34,7 +33,7 @@ export default class ShareConcept extends React.Component {
     />
   );
 
-  askPermissionsAsync = async () => {
+  askPermissionsAsync = async() => {
       await Permissions.askAsync(Permissions.CAMERA_ROLL);
       await Permissions.askAsync(Permissions.CAMERA);
       // probably need to do something to verify that permissions
@@ -42,97 +41,122 @@ export default class ShareConcept extends React.Component {
   };
 
   componentDidMount() {
-    const {navigation} = this.props;
-    const screenName = navigation.getParam('name', 'NO NAME');
-    const groupID = navigation.getParam('groupID', 'NO GROUP ID');
-    this.setState({author: screenName, group_id: groupID});
+    this.didFocusListener = this.props.navigation.addListener(
+      'didFocus',
+      () => { this.setData() },
+    );
+  };
+
+  componentWillUnmount() {
+    this.didFocusListener.remove();
   }
 
-  componentWillReceiveProps(nextProps) {
-    const screenName = nextProps.navigation.getParam('name', 'NO NAME');
-    const groupID = nextProps.navigation.getParam('groupID', 'NO GROUP ID');
-    this.setState({author: screenName, group_id: groupID});
+  async setData() {
+    let values
+    try {
+      values = await AsyncStorage.multiGet(['groupName', 'name', 'groupID']);
+      this.setState({groupName: values[0][1], author: values[1][1], group_id: values[2][1]})
+    } catch (err) {
+      console.log(err);
+    }
+    // console.log(values);
   }
 
 
   render() {
-    const {navigation} = this.props;
-    const groupName = navigation.getParam('groupName', 'NO GROUP');
-    const screenName = navigation.getParam('name', 'NO NAME');
-    const groupID = navigation.getParam('groupID', 'NO GROUP ID');
-
 
     return (
-      <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <KeyboardAwareScrollView
+        resetScrollToCoords={{ x: 0, y: 0 }}
+        contentContainerStyle={styles.container}
+      >
+      <View style={{ 
+        flex: 1, 
+        flexDirection: 'column', 
+        justifyContent: 'flex-start',
+        alignItems: 'center', 
+        padding: 10 
+      }}>
         <Image
           style={{width: 300, height: 50}}
           source={require('../assets/images/peerdea-logo-draft.png')}
         />
-        <Text>Welcome to {groupName}, {screenName}</Text>
-      <Button
-        title="Pick an image from camera roll"
-        onPress={this._pickImage}
-      />
-      <Button
-        title="Take a picture"
-        onPress={this._takePicture}
-      />
+        <Text>Welcome to {this.state.groupName}, {this.state.author}</Text>
+        <Button
+          title="Pick an image from camera roll"
+          onPress={this._pickImage}
+        />
+        <Button
+          title="Take a picture"
+          onPress={this._takePicture}
+        />
 
-      {this.state.images.length == 1 &&
+        <Button
+          onPress={() => { this.setState({images: [], imagesBase64: []});}}
+          title="Clear Images"
+          color="#841584"
+          accessibilityLabel="Clear Images"
+        />
+        
+        {this.state.images.length == 1 &&
 
-          <View key={this.state.images[0]} style={styles.slideContainer}>
-          <Image
-            style={{ width: 200, height: 200 }}
-            source={{uri: this.state.images[0]}}
-            resizeMode="contain"
-          />
-          </View>
-        }
-      {this.state.images.length > 1 &&
-      <Swiper height={200} width={200} >
-        {this.state.images.map(url => (
-          <View key={url} style={styles.slideContainer}>
-          <Image
-            style={{ width: 200, height: 200 }}
-            source={{uri: url}}
-            resizeMode="contain"
-          />
-          </View>
-        ))}
-       </Swiper> }
+            <View key={this.state.images[0]} style={styles.slideContainer}>
+            <Image
+              style={{ width: 300, height: 300 }}
+              source={{uri: this.state.images[0]}}
+              resizeMode="contain"
+            />
+            </View>
+          }
+        {this.state.images.length > 1 &&
+        <Swiper height={300} width={300} >
+          {this.state.images.map(url => (
+            <View key={url} style={styles.slideContainer}>
+            <Image
+              style={{ width: 300, height: 300 }}
+              source={{uri: url}}
+              resizeMode="contain"
+            />
+            </View>
+          ))}
+        </Swiper> }
 
-      <Text> {this.state.author2} </Text>
-      <TextInput
-        style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-        onChangeText={(text) => this.setState({story:text})}
-        placeholder='This is my concepts story!'
-      />
-      <Button
-        onPress={() => { this._sendConcept();}}
-        title="Share concept with my group"
-        color="#841584"
-        accessibilityLabel="Share concept with my group"
-      />
-      <Button
-        onPress={() => {
-          navigation.navigate('GiveFeedback', {
-            groupID: groupID,
-            name: screenName
-          });}}
-        title="Review other concepts"
-        color="#841584"
-        accessibilityLabel="Review other concepts"
-      />
+        <TextInput
+          multiline= {true}
+          style={{height: 60, maxHeight: 60, width: 300, borderColor: 'gray', borderWidth: 1}}
+          onChangeText={(text) => this.setState({story: text})}
+          placeholder="This is my concepts story!"
+          
+        />
+        
+        <Button
+          onPress={() => { this._sendConcept();}}
+          title="Share concept with my group"
+          color="#841584"
+          accessibilityLabel="Share concept with my group"
+        />
       </View>
-      </ScrollView>
+      
+      </KeyboardAwareScrollView>
 
     );
   }
 
+  // _scrollToInput() {
+  //   const scrollResponder = this.refs.myScrollView.getScrollResponder();
+  //   const inputHandle = findNodeHandle(this.refs.myInput)
+
+  //   scrollResponder.scrollResponderScrollNativeHandleToKeyboard(
+  //     inputHandle, // The TextInput node handle
+  //     0, // The scroll view's bottom "contentInset" (default 0)
+  //     true // Prevent negative scrolling
+  //   );
+  // }
+
   _sendConcept = () => {
 
       // get requests to get users group keyword
+      const {navigation} = this.props;
       var temp = []
       for (i = 0; i < this.state.imagesBase64.length; i++){
           const buff = new Buffer(this.state.imagesBase64[i], 'base64');
@@ -166,7 +190,9 @@ export default class ShareConcept extends React.Component {
         })
         .then(function(json){
           console.log('suuccess');
-          Alert.alert('Thanks for sharing!');
+          Alert.alert(
+          'Thanks for sharing!'
+        );
         })
         .catch(function(error) {
         console.log('There has been a problem with your fetch operation: ' + error.message);

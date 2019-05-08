@@ -94,18 +94,16 @@ constructor(props) {
           <Text> {concept.name} </Text>
           <Text> {concept.description} </Text>
           <View style={{flex: 1, flexDirection: 'row', justifyContent: 'flex-start'}}>
-            <TouchableOpacity style={styles.btn}  onPress = {async () => { this._yes();}}>
+            <TouchableOpacity style={styles.button}  onPress = {async () => { this._yes();}}>
                <GiveFeedbackIcon
                     name={Platform.OS === 'ios' ? 'ios-heart' : 'md-heart'}
                   />
-               <Text>{concept.yes}</Text>
+               <Text>  {concept.yes}</Text>
             </TouchableOpacity>
-          </View>
-          <View style={{flex: 1, flexDirection: 'row'}}>
-            <TouchableOpacity style={styles.btn} onPress = {() => { this._yesAnd();}}>
+            <TouchableOpacity style={styles.button} onPress = {() => { this._yesAnd();}}>
                 <GiveFeedbackIcon
                   name={Platform.OS === 'ios' ? 'ios-heart' : 'md-heart'}
-                /><Text>and...</Text>
+                /><Text>  and...</Text>
             </TouchableOpacity>
           </View>
           {concept.isCollapsed &&
@@ -277,6 +275,21 @@ constructor(props) {
 
 
 const styles = StyleSheet.create({
+  button: {
+    marginTop:10,
+    paddingTop:15,
+    paddingBottom:15,
+    marginLeft:10,
+    marginRight:5,
+    backgroundColor:'#00BCD4',
+    borderRadius:10,
+    borderWidth: 1,
+    borderColor: '#fff',
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#DDDDDD',
+    padding: 10
+  },
   container: {
     paddingTop: 30,
     paddingBottom: 30,
