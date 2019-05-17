@@ -125,14 +125,17 @@ export default class HomeScreen extends React.Component {
             
           <Text style={styles.getStartedText}>Welcome to Peerdea</Text>
 
-          <Button raised 
+          <Button  
+            style = {{padding:10}}
             onPress={() => navigate('CreateGroup')}
             title="Create a new group"
             color="#841584"
             accessibilityLabel="Create a new group"
           />
 
-          <Button raised
+
+          <Button 
+            style = {{padding:10}}
             onPress={() => navigate('JoinGroup')}
             title="Join an existing group"
             color="#841584"
