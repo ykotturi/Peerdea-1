@@ -3,23 +3,26 @@ const Schema = mongoose.Schema;
 
 const ConceptSchema = new Schema (
   {
-    group_id: {
-      type: Schema.Types.ObjectId, 
-      ref: 'Group', 
-      required: true
+    groupId: {
+      //type: Schema.Types.ObjectId,
+      type: String,
+      //ref: 'Group',
+      //required: true
     },
     name: {
       type: String,
       required: true
     },
-    media: { 
+    /*
+    media: {
       type: [
       {data: Buffer,
       contentType: String}],
       required: true
     },
+    */
     description: {
-      type: String, 
+      type: String,
       required: true
     },
     yes: {
@@ -27,7 +30,8 @@ const ConceptSchema = new Schema (
       min: 0
     },
     yesand: {
-      type: [String]
+      //type: [String]
+      type: String
     }
   }
 );

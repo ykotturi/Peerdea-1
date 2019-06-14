@@ -1,33 +1,58 @@
+/*
+changes:
+  need to install graphql and express-graphQL
+  added author.js and book.js files in src
+  added schema/schema.js for graphql
+  REMINDER: need to add your own personal IP address on mongoDb whitelist
+*/
+
 const mongoose = require("mongoose");
 const express = require("express");
 var cors = require("cors");
 const bodyParser = require("body-parser");
+const graphqlHTTP = require('express-graphql'); //to integrate graphQL
 const logger = require("morgan");
-const Data = require("./data");
-const Group = require("./src/group")
-const Concept = require("./src/concept")
 
-const API_PORT = 80; //change for local testing, for instance to 3000
+//all the models we need to have
+const Data = require("./data");
+const Group = require("./src/group");
+const Concept = require("./src/concept");
+
+//these two models are for testing purposes
+const Author = require("./src/author");
+const Book = require("./src/book");
+
+//graphQL schema
+const schema = require('./schema/schema')
+
+const API_PORT = 3000; //change for local testing, for instance to 3000
 
 const app = express();
 app.use(cors());
 app.use(bodyParser({limit: '50mb'}));
 const router = express.Router();
+console.log("this is router:");
+console.log(router);
+console.log(app);
 
 // this is our MongoDB database
-const dbRoute = "mongodb://dronut-user:dronuts@cluster0-shard-00-00-hpghn.azure.mongodb.net:27017,cluster0-shard-00-01-hpghn.azure.mongodb.net:27017,cluster0-shard-00-02-hpghn.azure.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true";
+const dbRoute = "mongodb+srv://jennyyu73:1999Year@cluster0-qzcav.azure.mongodb.net/test?retryWrites=true&w=majority";
 
+
+// 13.93.205.134
 // connects our back end code with the database
 mongoose.connect(
   dbRoute,
   { useNewUrlParser: true }
 );
 
+//this represents our connection to the database
 let db = mongoose.connection;
 
+//if the connection (db) is successful, let the user know
 db.once("open", () => console.log("connected to the database"));
 
-// checks if connection with the database is successful
+// checks if connection with the database is invalid
 db.on("error", console.error.bind(console, "MongoDB connection error:"));
 
 // (optional) only made for logging and
@@ -52,6 +77,14 @@ router.get("/getGroupByName", (req, res) => {
   Group.find({"name" : name}, (err, data) => {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true, data: data});
+  });
+});
+
+//TESTING FUNCTION FOR SAMPLE AUTHOR DATA
+router.get("/getAuthor", (req, res) => {
+    Author.find((err, data) => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true, data: data });
   });
 });
 
@@ -83,7 +116,7 @@ router.post("/putGroup", (req, res) => {
   console.log("put body " + req.body);
   let group = new Group(req.body);
 
-  
+
 
   group.save(err => {
     if (err) return res.json({ success: false, error: err });
@@ -143,10 +176,10 @@ router.post("/yes", (req, res) => {
 // pushes the comment onto the end of the list of comments
 router.post("/yesand", (req, res) => {
   const {id, text} = req.body;
-  Concept.findOneAndUpdate({ "_id": id}, 
-    { 
-      $inc: { "yes": 1 }, 
-      $push: { "yesand": text} 
+  Concept.findOneAndUpdate({ "_id": id},
+    {
+      $inc: { "yes": 1 },
+      $push: { "yesand": text}
     }, err => {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true });
@@ -181,6 +214,17 @@ router.post("/putConcept", (req, res) => {
 
 // append /api for our http requests
 app.use("/api", router);
+
+
+app.use('/graphql', graphqlHTTP({
+    //directing express-graphql to use this schema to map out the graph
+    schema,
+    //directing express-graphql to use graphiql when adding '/graphql' to address in the browser
+    //which provides an interface to make GraphQl queries
+    graphiql:true
+}));
+
+
 
 // launch our backend into a port
 app.listen(API_PORT, () => console.log(`LISTENING ON PORT ${API_PORT}`));

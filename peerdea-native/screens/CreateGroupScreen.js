@@ -31,7 +31,8 @@ export default class CreateGroupScreen extends React.Component {
   async onCreate() {
     try {
       //check if the group exists first
-      const checkRes = await fetch('http://104.40.20.156/api/getGroupByName?name=' + this.state.groupName, {method: 'GET'});
+      console.log(this.state.groupName);
+      const checkRes = await fetch('http://localhost:3000/api/getGroupByName?name=' + this.state.groupName, {method: 'GET'});
       const checkResJson = await checkRes.json();
       console.log("print " + JSON.stringify(checkResJson.data));
       console.log(checkResJson.data.length);
@@ -46,7 +47,7 @@ export default class CreateGroupScreen extends React.Component {
           ],
           {cancelable: false},
         );
-      } 
+      }
       //if the group does not exist, create a new group with the name
       //and redirect the screen to the create concept screen
       else {
@@ -85,8 +86,8 @@ export default class CreateGroupScreen extends React.Component {
     catch(err) {
       console.log(err);
     }
-    
-    
+
+
   }
 
   render() {
@@ -100,21 +101,21 @@ export default class CreateGroupScreen extends React.Component {
             source={require('../assets/images/peerdea-logo-draft.png')}
           />
         <Text style={styles.getStartedText}>Create a new group below:</Text>
-        <View style={{flexDirection: 'row'}}> 
+        <View style={{flexDirection: 'row'}}>
           <TextInput
             style={{height: 40, flex: 0.5, borderColor: 'gray', borderWidth: 1}}
             onChangeText={(text) => this.setState({groupName: text})}
             placeholder="Enter your group name here"
           />
         </View>
-        <View style={{flexDirection: 'row'}}> 
+        <View style={{flexDirection: 'row'}}>
           <TextInput
             style={{height: 40, flex: 0.5, borderColor: 'gray', borderWidth: 1}}
             onChangeText={(text) => this.setState({memberName: text})}
             placeholder="Enter your screen name here"
           />
         </View>
-        <Button raised 
+        <Button raised
           onPress={() => this.onCreate()}
           title="Create"
           color="#841584"
@@ -130,9 +131,9 @@ export default class CreateGroupScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     paddingTop: 30,
-    paddingBottom: 30, 
-    flex: 1, 
-    alignItems: 'center', 
+    paddingBottom: 30,
+    flex: 1,
+    alignItems: 'center',
     justifyContent: 'center',
   },
   developmentModeText: {
